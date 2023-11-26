@@ -6,18 +6,67 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      component: FrontLayout,
+      children:[
+        {
+          path: '',
+          component: ()=>import('@/views/FrontStage/HomeView.vue')
+        },
+        {
+          path: 'login',
+          component: ()=>import('@/views/FrontStage/LoginView.vue')
+        },
+        {
+          path:'articles',
+          component: ()=>import('@/views/FrontStage/ArticleList.vue')
+        },
+        {
+          path: 'article',
+          component: ()=>import('@/views/FrontStage/ArticleDetail.vue')
+        },
+        {
+          path:'products',
+          component: ()=>import('@/views/FrontStage/ProductList.vue')
+        },
+        {
+          path: 'product',
+          component: ()=>import('@/views/FrontStage/ProductDetail.vue')
+        },
+        {
+          path: 'order',
+          component: ()=>import('@/views/FrontStage/OrderView.vue')
+        },
+        {
+          path:'cart',
+          component:()=>import('@/views/FrontStage/CartView.vue')
+        }
+      ]
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      path: '/admin',
+      component: RearLayout,
+      beforeEnter: async ()=> await guard(),
+      children: [
+        {
+          path: 'product',
+          component: ()=>import('@/views/RearStage/ProductManage.vue')
+        },
+        {
+          path: 'order',
+          component: ()=>import('@/views/RearStage/OrderManage.vue')
+        },
+        {
+          path:'coupon',
+          component:()=>import('@/views/RearStage/CouponManage.vue')
+        },
+        {
+          path:'article',
+          component:()=>import('@/views/RearStage/ArticleManage.vue')
+        }
+      ]
     }
-  ]
+  ],
+  linkActiveClass: 'active'
 })
 
 export default router
