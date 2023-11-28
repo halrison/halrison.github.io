@@ -124,7 +124,7 @@ import { currency,http } from "../../util"
 import { storeToRefs } from "pinia"
 import { computed, onMounted, reactive, ref } from "vue"
   import { useRouter } from "vue-router"
-  import RemoveModal from "@/components/removeModal.vue"
+  import RemoveModal from "@/components/RemoveModal.vue"
 import { defineRule } from "vee-validate"
 import { max, min } from "@vee-validate/rules"
 const CartStore = useCartStore(),{ getCarts }=CartStore,{cartItem,cartList,total,final_total}=storeToRefs(CartStore)
