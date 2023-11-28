@@ -22,23 +22,23 @@
             <div class="input-group d-inline-block">
               <div class="input-group bg-light rounded">
                 <div class="input-group-prepend">
-                  <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty-1)">
+                  <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty-1)" v-bind:disabled="cart.qty<2">
                     <i class="bi bi-dash"></i>
                   </button>
                 </div>
-                <Field type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" rules="required" min="1" name="carts[index]"
+                <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" required min="1"
                        placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"
-                       v-model.number="cart.qty" v-bind:class="{'is-invalid':errors['carts[index]']}"/>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty+1)">
-                      <i class="bi-plus bi"></i>
-                    </button>
-                  </div>
+                       v-model.number="cart.qty" v-bind:class="{'is-invalid':errors['carts[index]']}" v-on:change="editCart(cart.id,cart.qty)" />
+                <div class="input-group-append">
+                  <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty+1)">
+                    <i class="bi-plus bi"></i>
+                  </button>
+                </div>
               </div>
             </div>
-            <ErrorMessage name="carts[index]">
+            <p v-show="!cart.qty">
               <span class="text-danger">商品數量為必填</span>
-            </ErrorMessage>
+            </p>
           </td>
           <td class="col-3 text-end" v-text="currency(cart.total)"></td>
         </tr>
@@ -74,29 +74,29 @@
       <div class="row">
         <div class="col-3">姓名</div>
         <div class="col-9">
-          <Field class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{'is-invalid':errors['name']}"/>
-          <ErrorMessage class="text-danger" name="name"/>
+          <Field class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{'is-invalid':errors['name']}" />
+          <ErrorMessage class="text-danger" name="name" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">地址</div>
         <div class="col-9">
-          <Field class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{'is-invalid':errors['address']}"/>
-          <ErrorMessage class="text-danger" name="address"/>
+          <Field class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{'is-invalid':errors['address']}" />
+          <ErrorMessage class="text-danger" name="address" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電話</div>
         <div class="col-9">
-          <Field class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{'is-invalid':errors['tel']}"/>
+          <Field class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{'is-invalid':errors['tel']}" />
           <ErrorMessage class="text-danger" name="tel" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電子信箱</div>
         <div class="col-9">
-          <Field class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{'is-invalid':errors['email']}"/>
-          <ErrorMessage class="text-danger" name="email"/>
+          <Field class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{'is-invalid':errors['email']}" />
+          <ErrorMessage class="text-danger" name="email" />
         </div>
       </div>
       <div class="row">
@@ -113,38 +113,40 @@
     </div>
   </Form>
   <h1 class="text-center" v-else>未選購任何商品</h1>
-  <RemoveModal ref="modal" v-bind:item="cart" v-bind:type="type" />
+  <RemoveModal ref="modal" v-bind:item="cartItem" v-bind:type="type" />
 </template>
 <script setup>
-import useCartStore from "@/stores/carts"
-import useLoadingStore from "@/stores/loading"
-import useOrderStore from "@/stores/orders"
-import useMessageStore from "@/stores/messages"
-import { currency,http } from "../../util"
-import { storeToRefs } from "pinia"
-import { computed, onMounted, reactive, ref } from "vue"
-  import { useRouter } from "vue-router"
+  import useCartStore from "@/stores/carts"
+  import useLoadingStore from "@/stores/loading"
+  import useOrderStore from "@/stores/orders"
+  import useMessageStore from "@/stores/messages"
   import RemoveModal from "@/components/RemoveModal.vue"
-import { defineRule } from "vee-validate"
-import { max, min } from "@vee-validate/rules"
-const CartStore = useCartStore(),{ getCarts }=CartStore,{cartItem,cartList,total,final_total}=storeToRefs(CartStore)
-const {isLoading}=storeToRefs(useLoadingStore()),OrderStore=useOrderStore(),{pushMessage}=useMessageStore()
-const router=useRouter()
-const user=reactive({
-  name:'',
-  tel:'',
-  address:'',
-  email:''
-}), message = ref(''), type = ref(''), code = ref(''),modal=ref(null)
-defineRule('min',min)
-defineRule('max',max)
-  defineRule('isPhone', value =>/(^0[2-8]{1}\d{7,8}$|^09\d{8}$)/.test(value)||'格式不符')
-onMounted(function(){getCarts()})
-async function addOrder(){
-  await OrderStore.addOrder(user,message.value)
-  cartList.value=[]
-  router.push({path:'/order'})
-}
+  import { currency, http } from "../../util"
+  import { storeToRefs } from "pinia"
+  import { computed, onMounted, reactive, ref } from "vue"
+  import { useRouter } from "vue-router"
+  import { defineRule } from "vee-validate"
+  import { max, min } from "@vee-validate/rules"
+  const CartStore = useCartStore(), { getCarts } = CartStore, { cartItem, cartList, total, final_total } = storeToRefs(CartStore)
+  const { isLoading } = storeToRefs(useLoadingStore()), OrderStore = useOrderStore(), { pushMessage } = useMessageStore()
+  const router = useRouter()
+  const user = reactive({
+    name: '',
+    tel: '',
+    address: '',
+    email: ''
+  }), message = ref(''), type = ref(''), code = ref(''), modal = ref(null)
+  defineRule('min', min)
+  defineRule('max', max)
+  defineRule('isPhone', value => /(^0[2-8]{1}\d{7,8}$|^09\d{8}$)/.test(value) || '格式不符')
+  onMounted(async function () {
+    await getCarts()
+  })
+  async function addOrder () {
+    await OrderStore.addOrder(user, message.value)
+    cartList.value = []
+    router.push({ path: '/order' })
+  }
   function applyCoupon (code) {
     http.post(
       `/api/${import.meta.env.VITE_PATH}/coupon`,
@@ -153,23 +155,22 @@ async function addOrder(){
       if (response.data.success) {
         pushMessage('success', response.data.message, `優惠價為${response.data.data.final_total}`)
         final_total.value = response.data.data.final_total
-      }else{
-         pushMessage('danger', response.data.message)
+      } else {
+        pushMessage('danger', response.data.message)
       }
     })
   }
-function editCart(cart_id,qty){
-  cartItem.value=cartList.value.find(cart=>cart.id===cart_id)
-  if (cartItem.value.qty > 0) CartStore.editCart(qty)
-  cartItem.value = {}
-}
-function removeCart(id){
-  cartItem.value = cartList.value.find(cart => cart.id === id)
-  type.value = '單一購物車'
-  modal.value.show()
-}
-function removeCarts(){
-  type.value = '所有購物車'
-  modal.value.show()
-}
+  function editCart (cart_id, qty) {
+    cartItem.value = cartList.value.find(cart => cart.id === cart_id)
+    CartStore.editCart(qty)
+  }
+  function removeCart (id) {
+    cartItem.value = cartList.value.find(cart => cart.id === id)
+    type.value = '單一購物車'
+    modal.value.show()
+  }
+  function removeCarts () {
+    type.value = '所有購物車'
+    modal.value.show()
+  }
 </script>
