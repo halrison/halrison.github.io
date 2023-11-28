@@ -80,7 +80,7 @@ import { useRoute } from "vue-router"
 const ProductStore=useProductStore(),{getProduct}=ProductStore,{product}=storeToRefs(ProductStore)
 const { isLoading }=storeToRefs(useLoadingStore())
 const { pushMessage }= useMessageStore()
-const cartStore = useCartStore(),{addCart,getCarts}=cartStore,{carts}=storeToRefs(cartStore)
+const cartStore = useCartStore(),{addCart,getCarts}=cartStore,{cartList}=storeToRefs(cartStore)
 const route=useRoute()
 const isFavorite=ref(false),quantity=ref(1)
 const emit=defineEmits(['cart'])
@@ -102,7 +102,7 @@ function favorite(){
   localStorage.setItem('favorite',JSON.stringify(favoriteList))
 }
 async function addToCart(){
-  if(carts.value?.find(cart=>cart.product_id===product.value.id)){
+  if(cartList.value?.find(cart=>cart.product_id===product.value.id)){
     pushMessage('info','重複加入商品',`商品${product.value.title}已位於購物車中`)
   }else{
     await addCart(quantity.value)

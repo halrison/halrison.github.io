@@ -25,7 +25,7 @@
           訂單
         </router-link>
         <router-link to="/cart" class="text-secondary nav-link">
-          <span class="badge rounded-pill bg-info text-dark" v-if="carts?.length" v-text="carts.length"></span>
+          <span class="badge rounded-pill bg-info text-dark" v-if="cartList?.length" v-text="cartList.length"></span>
           <i class="bi bi-cart" v-else></i>
           購物車
         </router-link>
@@ -39,7 +39,7 @@ import { ref,onMounted } from 'vue'
 import useCartStore from "@/stores/carts"
 import { storeToRefs } from 'pinia'
 const myCollapse = ref(null),isActive=ref(false)
-const {carts}=storeToRefs(useCartStore())
+const {cartList}=storeToRefs(useCartStore())
 let bsCollapse
 onMounted(function () {
   bsCollapse = new Collapse(
