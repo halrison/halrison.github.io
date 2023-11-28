@@ -7,7 +7,10 @@ import { http } from "../util"
 export default defineStore(
   'carts',
   () => {
-    const carts = ref([]), final_total = ref(0), total = ref(0), { isLoading } = storeToRefs(useLoadingStore()), { product } = storeToRefs(useProductStore()), { pushMessage } = useMessageStore()
+    const cartItem=ref({}),cartList = ref([]), final_total = ref(0), total = ref(0)
+    const { isLoading } = storeToRefs(useLoadingStore())
+    const { product } = storeToRefs(useProductStore())
+    const { pushMessage } = useMessageStore()
     function addCart (quantity) {
       http.post(
         `/api/${import.meta.env.VITE_PATH}/cart`,
@@ -20,47 +23,59 @@ export default defineStore(
       ).then(function (response) {
         if (response.data.success) {
           pushMessage('success', '加入購物車成功', `已將${product.value.title}加入購物車`)
-          carts.value.push(response.data.data)
+          cartList.value.push(response.data.data)
         } else {
           pushMessage('danger', '加入購物車失敗', `未將${product.value.title}加入購物車`)
         }
       }).finally(function () { getCarts() })
     }
-    function editCart (cart, product, qty) {
-      http.put(
-        `/api/${import.meta.env.VITE_PATH}/cart/${cart}`,
+    function editCart ( qty) {
+        console.info(cartItem.value)
+http.put(
+        `/api/${import.meta.env.VITE_PATH}/cart/${cartItem.value.id}`,
         {
           data:
           {
-            product_id: product,
+            product_id: cartItem.value.product_id,
             qty
           }
         }
       ).then(function (response) {
         if (response.data.success) {
           pushMessage('success', response.data.message)
+          cartList.value.splice(
+            cartList.value.indexOf(cartItem.value),
+            1,
+            {
+                ...cartItem.value,
+                product_id:response.data.data.product_id,
+                qty:response.data.data.qty
+            }
+          )
         } else {
           response.data.message.forEach(function (msg) { pushMessage('danger', '未更新購物車', msg) })
         }
-      }).finally(function () { getCarts() })
+      }).finally(function () { 
+        getCarts()
+      })
     }
     function getCarts () {
       isLoading.value = true
-      carts.value = []
+      cartList.value = []
       total.value = 0
       final_total.value = 0
-      http.get(`/api/${import.meta.env.VITE_PATH}/cart?timestamp=${Date.now()}`)
+      http.get(`/api/${import.meta.env.VITE_PATH}/cart`)
         .then(function (response) {
           if (response.data.success) {
-            carts.value = response.data.data.carts
+            cartList.value = response.data.data.carts
             total.value = response.data.data.total
             final_total.value = response.data.data.final_total
             isLoading.value = false
           }
         })
     }
-    function removeCart (id) {
-      http.delete(`/api/${import.meta.env.VITE_PATH}/cart/${id}`)
+    function removeCart () {
+      http.delete(`/api/${import.meta.env.VITE_PATH}/cart/${cartItem.value.id}`)
         .then(function (response) {
           if (response.data.success) { pushMessage('success', response.data.message) }
           else { pushMessage('success', response.data.message) }
@@ -76,6 +91,6 @@ export default defineStore(
           }
         }).finally(function () { getCarts() })
     }
-    return { carts, final_total, total, addCart, editCart, getCarts, removeCart, removeCarts }
+    return { cartItem,cartList, final_total, total, addCart, editCart, getCarts, removeCart, removeCarts }
   }
 )

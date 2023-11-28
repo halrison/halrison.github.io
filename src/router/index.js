@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import FrontLayout from '../layouts/FrontLayout.vue'
 import RearLayout from '../layouts/RearLayout.vue'
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+import guard from './guard'
+export default createRouter({
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -69,5 +69,3 @@ const router = createRouter({
   ],
   linkActiveClass: 'active'
 })
-
-export default router

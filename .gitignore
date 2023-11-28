@@ -6,14 +6,14 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+bin
 node_modules
 .DS_Store
 dist
 dist-ssr
 coverage
 *.local
-
+obj
 /cypress/videos/
 /cypress/screenshots/
 
@@ -26,3 +26,4 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+.env

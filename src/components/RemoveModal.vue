@@ -79,7 +79,7 @@
         break
       case '單一購物車':
         cart.value = prop.item
-        await removeCart(cart.value.id)
+        await removeCart()
         break
       case '所有購物車':
         await removeCarts()

@@ -1,6 +1,6 @@
 <template>
   <loading v-bind:active="isLoading" v-bind:is-full-page="true" />
-  <Form class="container" v-if="carts.length" v-on:submit="addOrder" v-slot="{errors,validate}">
+  <Form class="container" v-if="cartList.length" v-on:submit="addOrder" v-slot="{errors,validate}">
     <table class="table table-borderless mx-auto w-100">
       <thead>
         <tr class="row">
@@ -11,7 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="row" v-for="cart,index in carts" v-bind:key="cart.id">
+        <tr class="row" v-for="cart,index in cartList" v-bind:key="cart.id">
           <td class="col-1">
             <button type="button" class="btn btn-outline-danger" v-on:click="removeCart(cart.id)">
               <i class="bi bi-cart-x-fill"></i>
@@ -19,7 +19,23 @@
           </td>
           <td class="col-6" v-text="cart.product.title"></td>
           <td class="col-2 text-end">
-            <Field class="form-control" type="number" rules="required" min="1" name="carts[index]" v-model="cart.qty" v-bind:class="{'is-invalid':errors['carts[index]']}" v-on:change="editCart(cart.id,cart.product.id,cart.qty)" />
+            <div class="input-group d-inline-block">
+              <div class="input-group bg-light rounded">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty-1)">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                </div>
+                <Field type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" rules="required" min="1" name="carts[index]"
+                       placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"
+                       v-model.number="cart.qty" v-bind:class="{'is-invalid':errors['carts[index]']}"/>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty+1)">
+                      <i class="bi-plus bi"></i>
+                    </button>
+                  </div>
+              </div>
+            </div>
             <ErrorMessage name="carts[index]">
               <span class="text-danger">商品數量為必填</span>
             </ErrorMessage>
@@ -31,7 +47,7 @@
         <tr class="row" v-if="final_total===total">
           <th class="col-6"></th>
           <td class="col-3 text-end">總計</td>
-          <td class="col-3 text-end" v-text="total"></td>
+          <td class="col-3 text-end" v-text="currency(total)"></td>
         </tr>
         <tr class="row" v-else>
           <th class="col-1">折扣</th>
@@ -106,12 +122,12 @@ import useOrderStore from "@/stores/orders"
 import useMessageStore from "@/stores/messages"
 import { currency,http } from "../../util"
 import { storeToRefs } from "pinia"
-import { onMounted, reactive, ref } from "vue"
+import { computed, onMounted, reactive, ref } from "vue"
   import { useRouter } from "vue-router"
-  import RemoveModal from "@/components/RemoveModal.vue"
+  import RemoveModal from "@/components/removeModal.vue"
 import { defineRule } from "vee-validate"
 import { max, min } from "@vee-validate/rules"
-const CartStore = useCartStore(),{ getCarts }=CartStore,{carts,total,final_total}=storeToRefs(CartStore)
+const CartStore = useCartStore(),{ getCarts }=CartStore,{cartItem,cartList,total,final_total}=storeToRefs(CartStore)
 const {isLoading}=storeToRefs(useLoadingStore()),OrderStore=useOrderStore(),{pushMessage}=useMessageStore()
 const router=useRouter()
 const user=reactive({
@@ -119,14 +135,14 @@ const user=reactive({
   tel:'',
   address:'',
   email:''
-}), message = ref(''), type = ref(''), code = ref(''),modal=ref(null),cart=ref({})
+}), message = ref(''), type = ref(''), code = ref(''),modal=ref(null)
 defineRule('min',min)
 defineRule('max',max)
   defineRule('isPhone', value =>/(^0[2-8]{1}\d{7,8}$|^09\d{8}$)/.test(value)||'格式不符')
 onMounted(function(){getCarts()})
 async function addOrder(){
   await OrderStore.addOrder(user,message.value)
-  carts.value=[]
+  cartList.value=[]
   router.push({path:'/order'})
 }
   function applyCoupon (code) {
@@ -142,11 +158,13 @@ async function addOrder(){
       }
     })
   }
-function editCart(cart,product,qty){
-  if (qty > 0) CartStore.editCart(cart, product, qty)
+function editCart(cart_id,qty){
+  cartItem.value=cartList.value.find(cart=>cart.id===cart_id)
+  if (cartItem.value.qty > 0) CartStore.editCart(qty)
+  cartItem.value = {}
 }
 function removeCart(id){
-  cart.value=carts.value.find(cart=>cart.id===id)
+  cartItem.value = cartList.value.find(cart => cart.id === id)
   type.value = '單一購物車'
   modal.value.show()
 }
