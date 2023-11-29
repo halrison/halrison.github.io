@@ -44,7 +44,7 @@ http.put(
         if (response.data.success) {
           pushMessage('success', response.data.message)
           cartList.value.splice(
-            cartList.value.indexOf(cartItem.value),
+            cartList.value.findIndex(cart=>cart===cartItem.value),
             1,
             {
                 ...cartItem.value,

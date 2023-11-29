@@ -28,7 +28,7 @@
                 </div>
                 <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" required min="1"
                        placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"
-                       v-model.number="cart.qty" v-bind:class="{'is-invalid':errors['carts[index]']}" v-on:change="editCart(cart.id,cart.qty)" />
+                       v-model.number="cart.qty" v-bind:class="{'is-invalid':!cart.qty||cart.qty.toString().includes('.')}" v-on:change="editCart(cart.id,cart.qty)" />
                 <div class="input-group-append">
                   <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty+1)">
                     <i class="bi-plus bi"></i>
@@ -36,9 +36,8 @@
                 </div>
               </div>
             </div>
-            <p v-show="!cart.qty">
-              <span class="text-danger">商品數量為必填</span>
-            </p>
+              <span v-if="!cart.qty" class="text-danger">商品數量為必填</span>
+              <span v-else-if="cart.qty.toString().includes('.')" class="text-danger">商品數量需為整數</span>
           </td>
           <td class="col-3 text-end" v-text="currency(cart.total)"></td>
         </tr>
@@ -162,7 +161,7 @@
   }
   function editCart (cart_id, qty) {
     cartItem.value = cartList.value.find(cart => cart.id === cart_id)
-    CartStore.editCart(qty)
+    if(!qty.toString().includes('.'))CartStore.editCart(qty)
   }
   function removeCart (id) {
     cartItem.value = cartList.value.find(cart => cart.id === id)
