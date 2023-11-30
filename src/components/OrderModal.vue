@@ -102,14 +102,18 @@
                 <span class="col text-end" v-text="currency(product.total)"></span>
               </p>
               <p class="row" v-if="Object.values(order.products||{}).some(product=>product.coupon)">
-                <span class="col">折扣</span>
-                <span class="col text-end" v-text="Object.values(order.products).reduce((previos,current)=>previos+current.total-current.final_total,0)"></span>
-                <span class="col">優惠價</span>
-                <span class="col text-end" v-text="currency(order.total)"></span>
+                <span class="col-9 text-end">總計</span>
+                <span class="col-3 text-end border-top border-danger" v-text="currency(order.total*100/Object.values(order.products)[0].coupon.percent)"></span>
+                <span class="col-3">折扣</span>
+                <span class="col-3 text-end" v-text="currency(order.total*100/Object.values(order.products)[0].coupon.percent-order.total)"></span>
+                <span class="col-3 text-end">優惠價</span>
+                <span class="col-3 text-end border border-danger" v-text="currency(order.total)"></span>
+                <br />
+                <span class="text-info text-end">四捨五入至整數位，些微誤差不影響付款</span>
               </p>
               <p class="row" v-else>
-                <span class="col-9">合計</span>
-                <span class="col text-end" v-text="currency(order.total)"></span>
+                <span class="col-9 text-end">合計</span>
+                <span class="col text-end border-top border-danger" v-text="currency(order.total)"></span>
               </p>
             </div>
             <hr />
@@ -153,15 +157,16 @@
   defineExpose({ show })
   watch(
     () => prop.order,
-    function (newValue) {
-      getOrder(newValue.id)
+    async function (newValue) {
+      await getOrder(newValue.id)
+      user.value=order.value.user||newValue.user
     },
     { deep: true }
   )
   function show () { modal.show() }
   function hide () { 
     modal.hide()
-    getOrders(1,'admin')
+    getOrders(1,prop.type)
   }
   function subTotal (id) {
     const product = Object.values(order.value.products).find(p => p.id === id)

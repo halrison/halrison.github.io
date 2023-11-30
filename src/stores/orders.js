@@ -7,17 +7,19 @@ export default defineStore(
   'orders',
   () => {
     const orders = ref([]), order = ref({}), user = ref({}), pagination = ref({}), { pushMessage } = useMessageStore(), { isLoading } = storeToRefs(useLoadingStore())
-    function addOrder (user, message) {
+    function addOrder (userInfo, message) {
       http.post(
         `/api/${import.meta.env.VITE_PATH}/order/`,
         {
           data: {
-            user,
+            user:userInfo,
             message
           }
         }
       ).then(function (response) {
-        if (response.data.success) { pushMessage('success', response.data.message) }
+        if (response.data.success) { 
+          user.value=userInfo
+          pushMessage('success', response.data.message) }
       })
     }
     function editOrder () {
@@ -44,7 +46,7 @@ export default defineStore(
         .then(function (response) {
           if (response.data.success) {
             order.value = response.data.order
-            user.value = order.value.user
+            user.value = response.data.order.user
             isLoading.value = false
           }
         })

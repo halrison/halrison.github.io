@@ -129,12 +129,7 @@
   const CartStore = useCartStore(), { getCarts } = CartStore, { cartItem, cartList, total, final_total } = storeToRefs(CartStore)
   const { isLoading } = storeToRefs(useLoadingStore()), OrderStore = useOrderStore(), { pushMessage } = useMessageStore()
   const router = useRouter()
-  const user = reactive({
-    name: '',
-    tel: '',
-    address: '',
-    email: ''
-  }), message = ref(''), type = ref(''), code = ref(''), modal = ref(null)
+  const message = ref(''), type = ref(''), code = ref(''), modal = ref(null),user=ref({})
   defineRule('min', min)
   defineRule('max', max)
   defineRule('isPhone', value => /(^0[2-8]{1}\d{7,8}$|^09\d{8}$)/.test(value) || '格式不符')
@@ -142,7 +137,7 @@
     await getCarts()
   })
   async function addOrder () {
-    await OrderStore.addOrder(user, message.value)
+    await OrderStore.addOrder(user.value, message.value)
     cartList.value = []
     router.push({ path: '/order' })
   }

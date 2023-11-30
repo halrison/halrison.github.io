@@ -6,8 +6,8 @@
         <tr>
           <th>訂單編號</th>
           <th>建立日期</th>
-          <th>付款金額</th>
           <th>付款日期</th>
+          <th class="text-end">付款金額</th>
           <th>動作</th>
         </tr>
       </thead>
@@ -15,8 +15,8 @@
         <tr v-for="o in orders" v-bind:key="o.num">
           <td v-text="o.id"></td>
           <td v-text="new Date(o.create_at*1000).toLocaleDateString()"></td>
-          <td v-text="currency(o.total)"></td>
           <td>{{o.paid_date?new Date(o.paid_date*1000).toLocaleDateString():'尚未付款'}}</td>
+          <td class="text-end" v-text="currency(o.total)"></td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
               <button class="btn btn-outline-primary" v-on:click="openModal('view',o.id)">檢視</button>
@@ -27,7 +27,7 @@
       </tbody>
     </table>
     <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages>1" v-on:paginate="page=>getOrders(page,'user')" />
-    <OrderModal v-bind:id="order.id" type="user" ref="viewModal" />
+    <OrderModal v-bind:order="order" type="user" ref="viewModal" />
     <PayModal v-bind:order="order" ref="payModal" />
   </div>
 </template>

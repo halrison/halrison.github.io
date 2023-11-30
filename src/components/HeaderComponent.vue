@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-    <a href="/Hexschool-Vue3CourseFinal" class="navbar-brand ms-2">
+    <a href="/" class="navbar-brand ms-2">
       <img src="@/assets/images/apple-icon.png"  width="30" height="24"/>
     </a>
     <button v-on:click="toggleShow" ref="myCollapse" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

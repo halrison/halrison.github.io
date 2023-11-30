@@ -39,7 +39,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col"></div>
+              <div class="col">效期</div>
               <div class="col">
                 <Field label="效期" name="valid-thru" class="form-control" type="month" rules="required" v-bind:class="{'is-invalid':errors['valid-thru']}" />
                 <ErrorMessage name="valid-thru" class="invalid-feedback" />
