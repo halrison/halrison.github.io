@@ -9,21 +9,21 @@ lerna-debug.log*
 bin
 node_modules
 .DS_Store
-dist
+obj
 dist-ssr
 coverage
 *.local
 obj
 /cypress/videos/
 /cypress/screenshots/
-
+*.config
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 *.suo
 *.ntvs*
-*.njsproj
+*.njsproj*
 *.sln
 *.sw?
 .env

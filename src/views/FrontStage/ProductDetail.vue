@@ -87,11 +87,11 @@ const emit=defineEmits(['cart'])
 onMounted(async function(){
   await getProduct(route.query.id)
   await getCarts()
-  isFavorite.value = localStorage.getItem('favorite').includes(route.query.id)
+  isFavorite.value = localStorage.hasOwnProperty('favorite') && localStorage.getItem('favorite').includes(route.query.id)
 })
 function favorite(){
   isFavorite.value=!isFavorite.value
-  let favoriteList = JSON.parse(localStorage.getItem('favorite')) || []
+  let favoriteList = localStorage.hasOwnProperty('favorite')?JSON.parse(localStorage.getItem('favorite')):[]
   if(favoriteList.includes(product.value.id)){
     favoriteList = favoriteList.filter(f => f !== product.value.id) 
     pushMessage('success', '移除最愛成功', `已將${product.value.title}移除最愛`)
