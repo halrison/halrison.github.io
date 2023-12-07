@@ -141,7 +141,7 @@
   function addImage (url) {
     if (ProductStore.product.imageUrl) {
       ProductStore.product.imagesUrl ||= []
-      product.imagesUrl.push(url)
+      ProductStore.product.imagesUrl.push(url)
     } else { ProductStore.product.imageUrl = url }
     tempUrl.value=''
   } 

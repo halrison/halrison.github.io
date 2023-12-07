@@ -66,6 +66,25 @@
       <div class="col" v-text="product.description"></div>
     </div>
     <h3>更多商品</h3>
+    <div class="row mb-1 overflow-hidden">
+      <div class="col-3" v-for="product in products.filter(product=>product.id!==route.query.id)" v-bind:key="product.id">
+        <ProductCard v-bind:product="product">
+          <template v-slot:header>
+            <div class="card-header">
+              <h5 class="card-title" v-text="product.title"></h5>
+            </div>
+          </template>
+          <template v-slot:body>
+            <div class="card-body">
+              <span class="card-text float-start">台幣{{product.price}}元</span>
+              <span class="card-text float-end">
+                <small class="text-muted">剩餘{{product.num}}{{product.unit}}</small>
+              </span>
+            </div>
+          </template>
+        </ProductCard>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
@@ -74,10 +93,11 @@ import useLoadingStore from "@/stores/loading"
 import useMessageStore from "@/stores/messages"
 import useCartStore from "@/stores/carts"
 import Carousel from "@/components/CarouselComponent.vue"
+import ProductCard from "@/components/ProductCard.vue"
 import { onMounted, ref } from "vue"
 import { storeToRefs } from "pinia"
 import { useRoute } from "vue-router"
-const ProductStore=useProductStore(),{getProduct}=ProductStore,{product}=storeToRefs(ProductStore)
+  const ProductStore = useProductStore(), { getProduct, getProducts }=ProductStore,{product,products}=storeToRefs(ProductStore)
 const { isLoading }=storeToRefs(useLoadingStore())
 const { pushMessage }= useMessageStore()
 const cartStore = useCartStore(),{addCart,getCarts}=cartStore,{cartList}=storeToRefs(cartStore)
@@ -86,6 +106,7 @@ const isFavorite=ref(false),quantity=ref(1)
 const emit=defineEmits(['cart'])
 onMounted(async function(){
   await getProduct(route.query.id)
+  await getProducts(1,'customer')
   await getCarts()
   isFavorite.value = localStorage.hasOwnProperty('favorite') && localStorage.getItem('favorite').includes(route.query.id)
 })
