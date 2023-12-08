@@ -7,7 +7,7 @@
       <router-link class=" text-decoration-none" v-bind:to="`/article?id=${article.id}`">
         <h4 class="mt-4" v-text="article.title"></h4>
       </router-link>
-      <p class="text-muted" v-text="article.description"></p>
+      <p class="text-muted text-truncate" v-text="article.description"></p>
     </div>
   </div>
 </template>

@@ -158,8 +158,8 @@ const prop = defineProps(['article'])
     article.value.tag.push(tagName)
     tempTag.value = ''
   }
-  function removeTag (tagName) {
-    article.value.tag=article.value.tag.splice(article.value.tag.indexOf(tagName), 1)
+  function removeTag (tagName) {    
+    article.value.tag=article.value.tag.filter(tag=>tag!==tagName)
   }
   function addEditArticle () {
     article.value.create_at =Date.parse( article.value.create_at)
