@@ -62,29 +62,17 @@
       </div>
     </div>
     <div class="row my-5">
-      <div class="col border-end" v-text="product.content"></div>
-      <div class="col" v-text="product.description"></div>
-    </div>
-    <h3>更多商品</h3>
-    <div class="row mb-1 overflow-hidden">
-      <div class="col-3" v-for="product in products.filter(product=>product.id!==route.query.id)" v-bind:key="product.id">
-        <ProductCard v-bind:product="product">
-          <template v-slot:header>
-            <div class="card-header">
-              <h5 class="card-title" v-text="product.title"></h5>
-            </div>
-          </template>
-          <template v-slot:body>
-            <div class="card-body">
-              <span class="card-text float-start">台幣{{product.price}}元</span>
-              <span class="card-text float-end">
-                <small class="text-muted">剩餘{{product.num}}{{product.unit}}</small>
-              </span>
-            </div>
-          </template>
-        </ProductCard>
+      <div class="col border-end">
+        <h3 class="text-center">商品描述</h3>
+        <p v-text="product.description"></p>
+      </div>
+      <div class="col">
+        <h3 class="text-center">商品說明</h3>
+        <p v-text="product.content"></p>
       </div>
     </div>
+    <h3 class="text-center">更多商品</h3>
+    <Swiper class="mb-1" v-bind:products="products.filter(product=>product.id!==route.query.id)"/>
   </div>
 </template>
 <script setup>
@@ -93,7 +81,7 @@ import useLoadingStore from "@/stores/loading"
 import useMessageStore from "@/stores/messages"
 import useCartStore from "@/stores/carts"
 import Carousel from "@/components/CarouselComponent.vue"
-import ProductCard from "@/components/ProductCard.vue"
+import Swiper from "@/components/SwiperComponent.vue"
 import { onMounted, ref } from "vue"
 import { storeToRefs } from "pinia"
 import { useRoute } from "vue-router"
@@ -130,3 +118,11 @@ async function addToCart(){
   }
 }
 </script>
+<style scoped>
+.col p{
+  white-space:pre-line;
+}
+.row.mb-1{
+  overflow:clip;
+}
+</style>

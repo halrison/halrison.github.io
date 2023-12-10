@@ -4,11 +4,11 @@
   <table class="table mt-4">
     <thead>
       <tr>
-        <th width="120">分類</th>
-        <th width="200">產品名稱</th>
-        <th width="120" class="text-end">原價</th>
-        <th width="120" class="text-end">售價</th>
-        <th width="100">是否啟用</th>
+        <th>分類</th>
+        <th>產品名稱</th>
+        <th class="text-end">原價</th>
+        <th class="text-end">售價</th>
+        <th class="text-center">是否啟用</th>
         <th>編輯</th>
       </tr>
     </thead>
@@ -18,7 +18,7 @@
         <td v-text="product.title"></td>
         <td v-text="currency(product.origin_price)" class="text-end"></td>
         <td v-text="currency(product.price)" class="text-end"></td>
-        <td v-bind:class="product.is_enabled===1?'text-success':text-danger">
+        <td v-bind:class="product.is_enabled===1?'text-success':text-danger" class="text-center">
           <span v-text="`${product.is_enabled===1?'啟':'停'}用`"></span>
         </td>
         <td>

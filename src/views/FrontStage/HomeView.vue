@@ -1,26 +1,19 @@
 <template>
   <loading v-bind:is-full-apge="true" v-bind:active="isLoading" />
   <div class="row justify-content-center my-auto">
-    <div class="col-md-4 text-center">
-      <h2>Zay 生活用品店</h2>
+    <div class="text-center">
+      <h1 class="mt-3">Zay 生活用品店</h1>
       <p class="text-muted mb-0">你的品味，由你創造</p>
       <button class="btn btn-dark rounded-0 mt-6" v-on:click="getDiscount">立即搶折扣</button>
     </div>
   </div>
-  <div class="row mt-5">
-    <div class="col-md-4 mt-md-4" v-for="product in filterProducts" v-bind:key="product.id">
-      <ProductCard v-bind:product="product">
-        <template v-slot:body class="text-center">
-          <div class="card-body ">
-            <h4 v-text="product.title"></h4>
-            <div class="d-flex justify-content-between">
-              <p class="card-text text-truncate mb-0" v-text="product.content"></p>
-            </div>
-          </div>
-        </template>
-      </ProductCard>
+  <div class="row my-5">
+    <h2 class="text-center">熱銷商品</h2>
+    <div class="mt-md-4">
+      <Swiper v-bind:products="products"/>
     </div>
   </div>
+  <h2 class="text-center">顧客評論</h2>
   <div class="bg-light my-2">
     <Carousel v-bind:items="Comments" v-slot="{items}">
       <div class="carousel-item my-5" v-for="comment,index in items" v-bind:key="index" v-bind:class="{'active':index===0}">
@@ -33,6 +26,7 @@
       </div>
     </Carousel>
   </div>
+  <h2 class="text-center">最新文章</h2>
   <div class="row my-2 m-auto" v-for="article in filterArticles">
     <ArticleCard v-bind:article="article" />
   </div>
@@ -56,7 +50,7 @@
   import useLoadingStore from "@/stores/loading"
   import useProductStore from "@/stores/products"
   import useArticleStore from "@/stores/articles"
-  import ProductCard from "@/components/ProductCard.vue"
+  import Swiper from "@/components/SwiperComponent.vue"
   import Carousel from "@/components/CarouselComponent.vue"
   import ArticleCard from "@/components/ArticleCard.vue"
   import Comments from "@/stores/Comments.json"
@@ -69,7 +63,6 @@
   const ArticleStore = useArticleStore()
   const { getArticles } = ArticleStore
   const { articles } = storeToRefs(ArticleStore)
-  const filterProducts = computed(() => [...products.value].sort(() => Math.random() - 0.5).splice(0, 3))
   const filterArticles = computed(() => [...articles.value].sort(() => Math.random() - 0.5).splice(0, 2))
   onMounted(async function () {
     await getProducts(1, 'customer')
