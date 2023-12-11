@@ -15,7 +15,7 @@
         <tr v-for="o in orders" v-bind:key="o.num">
           <td v-text="o.id"></td>
           <td v-text="new Date(o.create_at*1000).toLocaleDateString()"></td>
-          <td>{{o.paid_date?new Date(o.paid_date*1000).toLocaleDateString():'尚未付款'}}</td>
+          <td>{{ o.paid_date ? new Date(o.paid_date*1000).toLocaleDateString() : '尚未付款' }}</td>
           <td class="text-end" v-text="currency(o.total)"></td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -40,10 +40,10 @@
   import OrderModal from "@/components/OrderModal.vue"
   import PayModal from "@/components/PayModal.vue"
   import Pagination from "@/components/PaginationBar.vue"
-const viewModal = ref(null), payModal = ref(null)
+  const viewModal = ref(null), payModal = ref(null)
   const { isLoading } = storeToRefs(useLoadingStore())
   const orderStore = useOrderStore(), { getOrders } = orderStore, { orders, pagination } = storeToRefs(orderStore), order = ref({})
-onMounted(function () {
+  onMounted(function () {
     getOrders(1, 'user')
   })
   function openModal (action, id) {
@@ -55,5 +55,3 @@ onMounted(function () {
     }
   }
 </script>
-<style scoped>
-</style>

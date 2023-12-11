@@ -2,7 +2,7 @@
   <div class="modal fade" ref="DOM">
     <div class="modal-dialog" role="dialog">
       <Form class="modal-content" v-slot="{errors}" v-on:submit="addEditArticle" v-on:reset="hide" v-bind:initial-values="article" v-bind:initial-errors="error">
-        <div class="modal-header">{{article.id?'編輯':'新增'}}文章</div>
+        <div class="modal-header">{{ article.id?'編輯':'新增' }}文章</div>
         <div class="modal-body container">
           <div class="row py-1">
             <div class="col-3">
@@ -119,10 +119,10 @@
   const DOM = ref(null)
   const tempUrl = ref('')
   const tempTag = ref('')
-const prop = defineProps(['article'])
+  const prop = defineProps(['article'])
   const ArticleStore = useArticleStore()
-  const {getArticle}=ArticleStore
-  const {article}=storeToRefs(ArticleStore)
+  const { getArticle }=ArticleStore
+  const { article }=storeToRefs(ArticleStore)
   const error = {
     "title": undefined,
     "url":undefined,
@@ -134,7 +134,7 @@ const prop = defineProps(['article'])
   let modal
   onMounted(function () {
     modal = new Modal(DOM.value)     
-    tempTag.value=''
+    tempTag.value = ''
   })  
   watch(
     () => prop.article,
@@ -154,18 +154,22 @@ const prop = defineProps(['article'])
     ArticleStore.getArticles(1,'admin')
   }
   function addTag (tagName) {
-    article.value.tag||=[]
+    article.value.tag ||= []
     article.value.tag.push(tagName)
     tempTag.value = ''
   }
   function removeTag (tagName) {    
-    article.value.tag=article.value.tag.filter(tag=>tag!==tagName)
+    article.value.tag = article.value.tag.filter(tag => tag !== tagName)
   }
   function addEditArticle () {
-    article.value.create_at =Date.parse( article.value.create_at)
-    article.value.tag||=[]
-    article.value.image=tempUrl.value
-if(article.value.id){ArticleStore.editArticle(article)}else{ArticleStore.addArticle(article)}
+    article.value.create_at = Date.parse(article.value.create_at)
+    article.value.tag ||= []
+    article.value.image = tempUrl.value
+    if(article.value.id){
+      ArticleStore.editArticle(article)
+    }else{ 
+      ArticleStore.addArticle(article)
+    }
     hide()
  }
 </script>

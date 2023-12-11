@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <Header />
-    <ToastList v-show="messages"/>
+    <ToastList v-show="messages" />
     <RouterView />
     <Footer />
   </main>
@@ -12,5 +12,5 @@
   import ToastList from '@/components/ToastList.vue'
   import Footer from '@/components/FooterComponent.vue'
   import useMessageStore from '@/stores/messages'
-const { messages } = storeToRefs(useMessageStore())
+  const { messages } = storeToRefs(useMessageStore())
 </script>

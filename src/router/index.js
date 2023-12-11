@@ -8,7 +8,7 @@ export default createRouter({
     {
       path: '/',
       component: FrontLayout,
-      children:[
+      children: [
         {
           path: '',
           component: ()=>import('@/views/FrontStage/HomeView.vue')
@@ -58,11 +58,11 @@ export default createRouter({
         },
         {
           path:'coupon',
-          component:()=>import('@/views/RearStage/CouponManage.vue')
+          component: ()=>import('@/views/RearStage/CouponManage.vue')
         },
         {
           path:'article',
-          component:()=>import('@/views/RearStage/ArticleManage.vue')
+          component: ()=>import('@/views/RearStage/ArticleManage.vue')
         }
       ]
     }

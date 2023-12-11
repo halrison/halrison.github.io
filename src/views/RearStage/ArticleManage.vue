@@ -27,8 +27,8 @@
     </tbody>
   </table>
   <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages>1" v-on:paginate="page=>ArticleStore.getArticles(page,'admin')" />
-  <ArticleModal ref="addEditModal" v-bind:article="article"/>
-  <RemoveModal type="文章" ref="removeModal"  v-bind:item="article"/>
+  <ArticleModal ref="addEditModal" v-bind:article="article" />
+  <RemoveModal type="文章" ref="removeModal" v-bind:item="article" />
 </template>
 <script setup>
   import { storeToRefs } from 'pinia'
@@ -40,35 +40,33 @@
   import RemoveModal from "@/components/RemoveModal.vue"
   const addEditModal = ref(null)
   const removeModal = ref(null)
-  const article=ref({})
+  const article = ref({})
   const ArticleStore = useArticleStore()
-  const articles=computed(()=>ArticleStore.articles)
-  const pagination=computed(()=>ArticleStore.pagination)
+  const articles = computed(() => ArticleStore.articles)
+  const pagination = computed(() => ArticleStore.pagination)
   const { isLoading } = storeToRefs(useLoadingStore())
-  onMounted(async function () { 
+  onMounted(async function () {
     await ArticleStore.getArticles(1, 'admin')
   })
   function openModal (action, id = '') {
     article.value = {}
-switch (action) {
+    switch (action) {
       case 'add':
-        article.value = { 
+        article.value = {
           create_at: new Date().toISOString().split('T')[0],
-          tag:[]  
+          tag: []
         }
         addEditModal.value.show()
         break
       case 'edit':
-        article.value=articles.value.find(article=>article.id===id)
-    article.value.create_at = new Date(article.value.create_at).toISOString().split('T')[0]
-    addEditModal.value.show()
+        article.value = articles.value.find(article => article.id === id)
+        article.value.create_at = new Date(article.value.create_at).toISOString().split('T')[0]
+        addEditModal.value.show()
         break
       case 'remove':
-        article.value=articles.value.find(article=>article.id===id)
-removeModal.value.show()
+        article.value = articles.value.find(article => article.id === id)
+        removeModal.value.show()
         break
     }
   }
 </script>
-<style scoped>
-</style>

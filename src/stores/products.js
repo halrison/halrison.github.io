@@ -69,8 +69,8 @@ export default defineStore(
             products.value =response.data.products
             pagination.value=response.data.pagination
           }
-        }).catch(function (error) { pushMessage('danger', '取得商品失敗', error?.message) })
-        .finally(function () {
+        }).catch(function (error) { pushMessage('danger', '取得商品失敗', error?.message) 
+        }).finally(function () {
           isLoading.value = false
         })
     }
@@ -83,8 +83,8 @@ export default defineStore(
           } else {
             pushMessage('danger', '移除商品失敗', response.data.message)
           }
-        }).catch(function (error) { pushMessage('danger', '移除商品失敗', error?.message) })
-        .finally(function () {
+        }).catch(function (error) { pushMessage('danger', '移除商品失敗', error?.message) 
+        }).finally(function () {
           getProducts(1,'admin')
           isLoading.value = false
         })

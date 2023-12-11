@@ -13,14 +13,12 @@
 </template>
 <script setup>
   import useLoadingStore from "@/stores/loading"
-import useArticleStore from "@/stores/articles"
-import { storeToRefs } from "pinia"
-import { onMounted } from "vue"
-import { useRoute } from "vue-router"
+  import useArticleStore from "@/stores/articles"
+  import { storeToRefs } from "pinia"
+  import { onMounted } from "vue"
+  import { useRoute } from "vue-router"
   const { isLoading } = storeToRefs(useLoadingStore())
-const ArticleStore=useArticleStore(),{getArticle}=ArticleStore,{article}=storeToRefs(ArticleStore)
-const route=useRoute()
-onMounted(async function(){await getArticle(route.query.id,'customer')})
+  const ArticleStore = useArticleStore(), { getArticle } = ArticleStore, { article } = storeToRefs(ArticleStore)
+  const route = useRoute()
+  onMounted(async function () { await getArticle(route.query.id, 'customer') })
 </script>
-<style scoped>
-</style>

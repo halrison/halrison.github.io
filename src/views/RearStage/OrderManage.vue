@@ -15,7 +15,7 @@
         <tr v-for="order in orders" v-bind:key="order.num">
           <td v-text="order.id"></td>
           <td v-text="new Date(order.create_at*1000).toLocaleDateString()"></td>
-          <td>{{order.paid_date?new Date(order.paid_date*1000).toLocaleDateString():'尚未付款'}}</td>
+          <td>{{ order.paid_date ? new Date(order.paid_date*1000).toLocaleDateString() : '尚未付款' }}</td>
           <td class="text-end" v-text="order.total"></td>
           <td class="text-end">
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">

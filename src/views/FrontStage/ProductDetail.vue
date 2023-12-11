@@ -3,7 +3,7 @@
   <div class="container mt-1">
     <div class="row justify-content-center">
       <figure class="col figure">
-        <Carousel v-bind:items="product.imagesUrl?[product.imageUrl,...product.imagesUrl]:[product.imageUrl]" v-slot="{items}">
+        <Carousel v-bind:items="product.imagesUrl ? [product.imageUrl,...product.imagesUrl] : [product.imageUrl]" v-slot="{items}">
           <div class="ratio ratio-1x1 carousel-item" v-for="image,index in items" v-bind:key="index" v-bind:class="{'active':index===0}">
             <img v-bind:src="image" class="d-block img-fluid" />
           </div>
@@ -25,7 +25,7 @@
               </p>
               <h4 class="fw-bold text-end">現在只要 {{ product.price }} 元</h4>
             </template>
-            <h4 v-else>{{ product.origin_price }} 元</h4>
+            <h4 v-else>{{ product.price }} 元</h4>
           </div>
           <div class="col-6">
             <button class="btn btn-secondary input-group-prepend w-100 py-2" v-if="isFavorite" v-on:click="favorite">
@@ -44,10 +44,10 @@
                   <i class="bi bi-dash"></i>
                 </button>
               </div>
-              <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" placeholder="" 
-              aria-label="Example text with button addon" aria-describedby="button-addon1" v-bind:value="quantity">
+              <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" placeholder=""
+                     aria-label="Example text with button addon" aria-describedby="button-addon1" v-bind:value="quantity">
               <div class="input-group-append">
-                <button class="btn btn-outline-dark border-0 py-2" type="button"  v-on:click="quantity++">
+                <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="quantity++">
                   <i class="bi-plus bi"></i>
                 </button>
               </div>
@@ -72,57 +72,58 @@
       </div>
     </div>
     <h3 class="text-center">更多商品</h3>
-    <Swiper class="mb-1" v-bind:products="products.filter(product=>product.id!==route.query.id)"/>
+    <Swiper class="mb-1" v-bind:products="products.filter(product => product.id !== route.query.id)" />
   </div>
 </template>
 <script setup>
-import useProductStore from "@/stores/products"
-import useLoadingStore from "@/stores/loading"
-import useMessageStore from "@/stores/messages"
-import useCartStore from "@/stores/carts"
-import Carousel from "@/components/CarouselComponent.vue"
-import Swiper from "@/components/SwiperComponent.vue"
-import { onMounted, ref } from "vue"
-import { storeToRefs } from "pinia"
-import { useRoute } from "vue-router"
-  const ProductStore = useProductStore(), { getProduct, getProducts }=ProductStore,{product,products}=storeToRefs(ProductStore)
-const { isLoading }=storeToRefs(useLoadingStore())
-const { pushMessage }= useMessageStore()
-const cartStore = useCartStore(),{addCart,getCarts}=cartStore,{cartList}=storeToRefs(cartStore)
-const route=useRoute()
-const isFavorite=ref(false),quantity=ref(1)
-const emit=defineEmits(['cart'])
-onMounted(async function(){
-  await getProduct(route.query.id)
-  await getProducts(1,'customer')
-  await getCarts()
-  isFavorite.value = localStorage.hasOwnProperty('favorite') && localStorage.getItem('favorite').includes(route.query.id)
-})
-function favorite(){
-  isFavorite.value=!isFavorite.value
-  let favoriteList = localStorage.hasOwnProperty('favorite')?JSON.parse(localStorage.getItem('favorite')):[]
-  if(favoriteList.includes(product.value.id)){
-    favoriteList = favoriteList.filter(f => f !== product.value.id) 
-    pushMessage('success', '移除最愛成功', `已將${product.value.title}移除最愛`)
-}else{
-    favoriteList = favoriteList.concat(product.value.id)
-    pushMessage('success', '加入最愛成功', `已將${product.value.title}加入最愛`)
-}
-  localStorage.setItem('favorite',JSON.stringify(favoriteList))
-}
-async function addToCart(){
-  if(cartList.value?.find(cart=>cart.product_id===product.value.id)){
-    pushMessage('info','重複加入商品',`商品${product.value.title}已位於購物車中`)
-  }else{
-    await addCart(quantity.value)
+  import useProductStore from "@/stores/products"
+  import useLoadingStore from "@/stores/loading"
+  import useMessageStore from "@/stores/messages"
+  import useCartStore from "@/stores/carts"
+  import Carousel from "@/components/CarouselComponent.vue"
+  import Swiper from "@/components/SwiperComponent.vue"
+  import { onMounted, ref } from "vue"
+  import { storeToRefs } from "pinia"
+  import { useRoute } from "vue-router"
+  const ProductStore = useProductStore(), { getProduct, getProducts } = ProductStore, { product, products } = storeToRefs(ProductStore)
+  const { isLoading } = storeToRefs(useLoadingStore())
+  const { pushMessage } = useMessageStore()
+  const cartStore = useCartStore(), { addCart, getCarts } = cartStore, { cartList } = storeToRefs(cartStore)
+  const route = useRoute()
+  const isFavorite = ref(false), quantity = ref(1)
+  const emit = defineEmits(['cart'])
+  onMounted(async function () {
+    await getProduct(route.query.id)
+    await getProducts(1, 'customer')
+    await getCarts()
+    isFavorite.value = localStorage.hasOwnProperty('favorite') && localStorage.getItem('favorite').includes(route.query.id)
+  })
+  function favorite () {
+    isFavorite.value = !isFavorite.value
+    let favoriteList = localStorage.hasOwnProperty('favorite') ? JSON.parse(localStorage.getItem('favorite')) : []
+    if (favoriteList.includes(product.value.id)) {
+      favoriteList = favoriteList.filter(f => f !== product.value.id)
+      pushMessage('success', '移除最愛成功', `已將${product.value.title}移除最愛`)
+    } else {
+      favoriteList = favoriteList.concat(product.value.id)
+      pushMessage('success', '加入最愛成功', `已將${product.value.title}加入最愛`)
+    }
+    localStorage.setItem('favorite', JSON.stringify(favoriteList))
   }
-}
+  async function addToCart () {
+    if (cartList.value?.find(cart => cart.product_id === product.value.id)) {
+      pushMessage('info', '重複加入商品', `商品${product.value.title}已位於購物車中`)
+    } else {
+      await addCart(quantity.value)
+    }
+  }
 </script>
 <style scoped>
-.col p{
-  white-space:pre-line;
-}
-.row.mb-1{
-  overflow:clip;
-}
+  .col p {
+    white-space: pre-line;
+  }
+
+  .row.mb-1 {
+    overflow: clip;
+  }
 </style>

@@ -2,7 +2,7 @@
   <loading v-bind:is-full-page="true" v-bind:active="isLoading" />
   <div class="container position-relative">
     <div class="position-absolute h-100"></div>
-    <Form class="row justify-content-center" v-slot="{errors}" v-on:submit="login">
+    <Form class="row justify-content-center" v-slot="{ errors }" v-on:submit="login">
       <div class="col-md-6">
         <h1 class="h3 my-3 font-weight-normal">請先登入</h1>
         <div class="mb-2">
@@ -14,9 +14,8 @@
                  rules="required"
                  name="username"
                  v-model="user.username"
-                 v-bind:class="{'is-invalid':errors['username']}"
-            />
-            <ErrorMessage name="username" class="invalid-feedback"/>
+                 v-bind:class="{'is-invalid': errors['username']}" />
+          <ErrorMessage name="username" class="invalid-feedback" />
         </div>
         <div class="mb-2">
           <label for="inputPassword" class="sr-only">Password</label>
@@ -25,9 +24,9 @@
                  class="form-control"
                  placeholder="Password"
                  name="password"
-                 rules="required" 
+                 rules="required"
                  v-model="user.password"
-                 v-bind:class="{'is-invalid':errors['password']}"/>
+                 v-bind:class="{'is-invalid': errors['password']}" />
           <ErrorMessage name="password" class="invalid-feedback" />
         </div>
         <div class="text-end my-4">
@@ -38,35 +37,37 @@
   </div>
 </template>
 <script setup>
-import { reactive } from "vue";
-import { useRouter } from "vue-router";
+  import { reactive } from "vue"
+  import { useRouter } from "vue-router"
   import { storeToRefs } from 'pinia'
   import useLoadingStore from "@/stores/loading"
   import useMessageStore from "@/stores/messages"
-import Axios from "axios";
+  import Axios from "axios"
   const { isLoading } = storeToRefs(useLoadingStore())
-const user=reactive({
-  username: '',
-  password: ''
-})
-const router=useRouter()
-isLoading.value=true
-setTimeout(
-  function(){ isLoading.value=false},
-  1000
-)
-function login() {
-  Axios.post(
-    `${import.meta.env.VITE_API}admin/signin`, {
-    username: user.username,
-    password: user.password
-  }).then(function (response) {
-    if (response.data.success) {
-      sessionStorage.setItem('token',response.data.token)
-      router.push({ path: '/admin/product' })
-    }
-  }).catch(function(error){useMessageStore().pushMessage('danger',error?.message)})
-}
+  const user = reactive({
+    username: '',
+    password: ''
+  })
+  const router = useRouter()
+  isLoading.value = true
+  setTimeout(
+    function () { isLoading.value = false },
+    1000
+  )
+  function login () {
+    Axios.post(
+      `${import.meta.env.VITE_API}admin/signin`, 
+      {
+        username: user.username,
+        password: user.password
+      }
+    ).then(function (response) {
+      if (response.data.success) {
+        sessionStorage.setItem('token', response.data.token)
+        router.push({ path: '/admin/product' })
+      }
+    }).catch(function (error) { useMessageStore().pushMessage('danger', error?.message) })
+  }
 </script>
 <style scoped>
   .position-absolute {
@@ -77,6 +78,6 @@ function login() {
     background-image: url(https://images.unsplash.com/photo-1480399129128-2066acb5009e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1920&q=80);
     background-position: center center;
     opacity: 0.1;
-    z-index:-1;
+    z-index: -1;
   }
 </style>

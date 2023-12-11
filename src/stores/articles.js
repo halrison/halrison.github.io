@@ -67,12 +67,15 @@ export default defineStore(
     function removeArticle(article){
       http.delete(`/api/${import.meta.env.VITE_PATH}/admin/article/${article.id}`)
       .then(function(response){
-        if(response.data.success){pushMessage('success',response.data.message)}
-        else{response.data.message.forEach(msg=>pushMessage('danger',msg))}
+        if(response.data.success){ 
+          pushMessage('success',response.data.message) 
+        }else{
+          response.data.message.forEach(msg=>pushMessage('danger',msg))
+        }
       }).catch(function (error) {
         pushMessage('danger', '刪除文章失敗', error?.message)
       }).finally(function(){getArticles(1,'admin')})
     }
-    return { article, articles, pagination, addArticle, editArticle, getArticle, getArticles,removeArticle }
+    return { article, articles, pagination, addArticle, editArticle, getArticle, getArticles, removeArticle }
   }
 )

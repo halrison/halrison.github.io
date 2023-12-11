@@ -2,7 +2,7 @@
   <div class="modal fade" tabindex="-1" ref="DOM">
     <div class="modal-dialog modal-lg" role="dialog">
       <div class="modal-content">
-        <div class="modal-header">訂單編號：{{order.id}}</div>
+        <div class="modal-header">訂單編號：{{ order.id }}</div>
         <form v-if="prop.type==='admin'" ref="form">
           <div class="modal-body">
             <table class="table">
@@ -31,9 +31,9 @@
                   </td>
                   <td class="col text-end" v-text="currency(product.total)"></td>
                 </tr>
-                <tr class="row" v-if="Object.values(order.products||{}).some(product=>product.coupon)">
+                <tr class="row" v-if="Object.values(order.products || {}).some(product => product.coupon)">
                   <td class="col">折扣</td>
-                  <td class="col text-end">{{Object.values(order.products||{}).reduce((prev,current)=>prev+current.total-current.final_total,0)}}</td>
+                  <td class="col text-end">{{ Object.values(order.products || {}).reduce((prev,current) => prev+current.total-current.final_total, 0) }}</td>
                   <td class="col">優惠價</td>
                   <td class="col text-end" v-text="currency(order.total)"></td>
                 </tr>
@@ -80,7 +80,7 @@
                 <span class="col">建立日期</span>
                 <span class="col" v-text="new Date(order.create_at*1000).toLocaleDateString()"></span>
                 <span class="col">付款日期</span>
-                <span class="col" v-text="order.paid_date?new Date(order.paid_date*1000).toLocaleDateString():'等待付款中'"></span>
+                <span class="col">{{ order.paid_date ? new Date(order.paid_date*1000).toLocaleDateString() : '等待付款中' }}</span>
               </p>
               <p class="row">
                 <span class="col-3">留言</span>
@@ -101,11 +101,11 @@
                 <span class="col text-end" v-text="product.qty"></span>
                 <span class="col text-end" v-text="currency(product.total)"></span>
               </p>
-              <p class="row" v-if="Object.values(order.products||{}).some(product=>product.coupon)">
+              <p class="row" v-if="Object.values(order.products || {}).some(product => product.coupon)">
                 <span class="col-9 text-end">總計</span>
-                <span class="col-3 text-end border-top border-danger" v-text="currency(order.total*100/Object.values(order.products)[0].coupon.percent)"></span>
+                <span class="col-3 text-end border-top border-danger">{{ currency(order.total*100/Object.values(order.products)[0].coupon.percent) }}</span>
                 <span class="col-3">折扣</span>
-                <span class="col-3 text-end" v-text="currency(order.total*100/Object.values(order.products)[0].coupon.percent-order.total)"></span>
+                <span class="col-3 text-end">{{ currency(order.total*100/Object.values(order.products)[0].coupon.percent-order.total) }}</span>
                 <span class="col-3 text-end">優惠價</span>
                 <span class="col-3 text-end border border-danger" v-text="currency(order.total)"></span>
                 <br />
@@ -159,7 +159,7 @@
     () => prop.order,
     async function (newValue) {
       await getOrder(newValue.id)
-      user.value=order.value.user||newValue.user
+      user.value = order.value.user || newValue.user
     },
     { deep: true }
   )

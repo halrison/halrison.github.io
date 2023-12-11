@@ -19,7 +19,7 @@
         <td v-text="currency(product.origin_price)" class="text-end"></td>
         <td v-text="currency(product.price)" class="text-end"></td>
         <td v-bind:class="product.is_enabled===1?'text-success':text-danger" class="text-center">
-          <span v-text="`${product.is_enabled===1?'啟':'停'}用`"></span>
+          <span>{{ product.is_enabled===1 ? '啟' : '停' }}用</span>
         </td>
         <td>
           <div class="btn-group">
@@ -30,32 +30,32 @@
       </tr>
     </tbody>
   </table>
-  <Pagination v-bind:pagination="pagination"  v-show="pagination.total_pages>1" v-on:paginate="page=>ProductStore.getProducts(page,'admin')"/>
+  <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages>1" v-on:paginate="page=>ProductStore.getProducts(page,'admin')" />
   <ProductModal v-bind:product="product" ref="addEditModal" />
   <RemoveModal v-bind:item="product" type="產品" ref="removeModal" />
 </template>
 <script setup>
   import { computed, onMounted, ref } from 'vue'
   import { storeToRefs } from 'pinia'
-import useProductStore from '@/stores/products'
+  import useProductStore from '@/stores/products'
   import useLoadingStore from "@/stores/loading"
   import Pagination from "@/components/PaginationBar.vue"
-import ProductModal from '@/components/ProductModal.vue'
+  import ProductModal from '@/components/ProductModal.vue'
   import RemoveModal from '@/components/RemoveModal.vue'
-  import{currency} from "../../util"
+  import { currency } from "../../util"
   const { isLoading } = storeToRefs(useLoadingStore())
   const ProductStore = useProductStore()
-const products=computed(()=>ProductStore.products)
-const pagination=computed(()=>ProductStore.pagination)
-const product=ref({})
+  const products = computed(() => ProductStore.products)
+  const pagination = computed(() => ProductStore.pagination)
+  const product = ref({})
   const addEditModal = ref(null), removeModal = ref(null)
   onMounted(async function () {
     await ProductStore.getProducts(1, 'admin')
   })
   async function openModal (action, id = '') {
     product.value = products.value.find(product => product.id === id) || {}
-switch (action) {
-case 'add':
+    switch (action) {
+      case 'add':
         addEditModal.value.show()
         break
       case 'modify':

@@ -18,7 +18,7 @@
         <td v-text="coupon.code"></td>
         <td v-text="coupon.percent"></td>
         <td v-text="new Date(coupon.due_date).toLocaleDateString()"></td>
-        <td>{{coupon.is_enabled?'已':'未'}}啟用</td>
+        <td>{{ coupon.is_enabled ? '已' : '未' }}啟用</td>
         <td>
           <div class="btn-group btn-group-sm">
             <button class="btn btn-outline-primary" v-on:click="openModal('modify',coupon.id)">編輯</button>
@@ -29,45 +29,43 @@
     </tbody>
   </table>
   <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages>1"
-  v-on:paginate="page=>CouponStore.getCoupon(page,'admin')"/>
-  <CouponModal ref="addEditModal" v-bind:coupon="coupon"/>
+    v-on:paginate="page=>CouponStore.getCoupon(page,'admin')" />
+  <CouponModal ref="addEditModal" v-bind:coupon="coupon" />
   <RemoveModal ref="removeModal" v-bind:item="coupon" type="優惠券" />
 </template>
 <script setup>
-import { computed, onMounted, ref } from "vue";
+  import { computed, onMounted, ref } from "vue";
   import { storeToRefs } from "pinia";
-import useCouponStore from "@/stores/coupons"
-import useLoadingStore from "@/stores/loading"
+  import useCouponStore from "@/stores/coupons"
+  import useLoadingStore from "@/stores/loading"
   import Pagination from "@/components/PaginationBar.vue"
-import CouponModal from "@/components/CouponModal.vue"
-import RemoveModal from "@/components/RemoveModal.vue"
-const CouponStore=useCouponStore()
-const { isLoading } = storeToRefs(useLoadingStore())
-const coupon=ref({})
-const addEditModal=ref(null)
-const removeModal=ref(null)
-const coupons=computed(()=>CouponStore.coupons)
-const pagination=computed(()=>CouponStore.pagination)
+  import CouponModal from "@/components/CouponModal.vue"
+  import RemoveModal from "@/components/RemoveModal.vue"
+  const CouponStore = useCouponStore()
+  const { isLoading } = storeToRefs(useLoadingStore())
+  const coupon = ref({})
+  const addEditModal = ref(null)
+  const removeModal = ref(null)
+  const coupons = computed(() => CouponStore.coupons)
+  const pagination = computed(() => CouponStore.pagination)
   onMounted(async function () {
-  await CouponStore.getCoupons(1)
-})
-function openModal(action,id=''){
-  coupon.value = {}
-switch (action) {
-    case 'add':
-      coupon.value = { due_date: new Date().toISOString().split('T')[0] }
-      addEditModal.value.show()
-      break
-    case 'modify':
-      coupon.value=coupons.value.find(coupon => coupon.id === id)
-      coupon.value.due_date = new Date(coupon.value.due_date).toISOString().split('T')[0] 
-addEditModal.value.show()
-      break
-    case 'remove':
-      coupon.value =coupons.value.find(coupon => coupon.id === id)
-removeModal.value.show()
+    await CouponStore.getCoupons(1)
+  })
+  function openModal (action, id = '') {
+    coupon.value = {}
+    switch (action) {
+      case 'add':
+        coupon.value = { due_date: new Date().toISOString().split('T')[0] }
+        addEditModal.value.show()
+        break
+      case 'modify':
+        coupon.value = coupons.value.find(coupon => coupon.id === id)
+        coupon.value.due_date = new Date(coupon.value.due_date).toISOString().split('T')[0]
+        addEditModal.value.show()
+        break
+      case 'remove':
+        coupon.value = coupons.value.find(coupon => coupon.id === id)
+        removeModal.value.show()
+    }
   }
-}
 </script>
-<style scoped>
-</style>

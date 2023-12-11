@@ -13,13 +13,13 @@
       </nav>
       <div class="col-9 mt-1">
         <div class="card-group row">
-          <div class="col-6 row" v-for="article in filterArticles||articles" v-bind:key="article.id">
+          <div class="col-6 row" v-for="article in filterArticles || articles" v-bind:key="article.id">
             <ArticleCard v-bind:article="article" />
           </div>
         </div>
       </div>
     </div>
-    <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages>1" v-on:paginate="page=>getArticles(page,'customer')" />
+    <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages > 1" v-on:paginate="page => getArticles(page, 'customer')" />
   </div>
 </template>
 <script setup>
@@ -28,15 +28,15 @@
   import ArticleCard from '@/components/ArticleCard.vue'
   import Pagination from '@/components/PaginationBar.vue'
   import { storeToRefs } from 'pinia'
-  import {  computed, onMounted, ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   const ArticleStore = useArticleStore(), { getArticles } = ArticleStore, { articles, pagination } = storeToRefs(ArticleStore), { isLoading } = storeToRefs(useLoadingStore())
-  const selected=ref([])
+  const selected = ref([])
   const tags = computed(() => Array.from(new Set(articles.value.flatMap(article => article.tag))).filter(tag => !!tag))
   const filterArticles = computed(() =>{
     if(selected.value.length){
-      return articles.value.filter(article=>{
-        if(Object.hasOwn(article,'tag')){ 
-          return article.tag.some(t=>selected.value.includes(t))
+      return articles.value.filter(article =>{
+        if(Object.hasOwn(article, 'tag')){ 
+          return article.tag.some(t => selected.value.includes(t))
         }
       })
     }else{
@@ -45,6 +45,6 @@
   })
   onMounted(async function () {
     await getArticles(1, 'customer')
-    selected.value=[]
+    selected.value = []
 })
 </script>

@@ -15,17 +15,20 @@
 </template>
 <script setup >
 import { onMounted, ref } from "vue";
-import {Carousel} from "bootstrap"
+import { Carousel } from "bootstrap"
 const DOM=ref(null)
 const prop=defineProps(['items'])
-  let carousel
+let carousel
 onMounted(function(){
-  carousel=new Carousel(DOM.value,{
-    ride:'carousel'
-  })
+  carousel=new Carousel(
+    DOM.value,
+    {
+      ride:'carousel'
+    }
+  )
 })
-function prev(){carousel.prev()}
-function next(){carousel.next()}
+function prev(){ carousel.prev() }
+function next(){ carousel.next() }
 </script>
 <style scoped>
 </style>

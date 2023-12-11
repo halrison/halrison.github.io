@@ -1,10 +1,10 @@
 <template>
   <div class="modal fade" tabindex="-1" ref="DOM">
     <div class="modal-dialog modal-xl" role="dialog">
-      <Form class="modal-content border-0" v-slot="{errors}" v-on:submit="addOrEditProduct" v-on:reset="hide">
+      <Form class="modal-content border-0" v-slot="{ errors }" v-on:submit="addOrEditProduct" v-on:reset="hide">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title" id="exampleModalLabel">
-            <span>{{ProductStore.product.id?'變更':'新增'}}產品</span>
+            <span>{{ ProductStore.product.id?'變更':'新增' }}產品</span>
           </h5>
         </div>
         <div class="modal-body">
@@ -15,7 +15,7 @@
                 <br />
                 <p class="mb-3 input-group">
                   <Field label="圖片網址" name="url" rules="url" type="text" class="form-control" id="image" aria-describedby="addImage" placeholder="請輸入圖片連結"
-                     v-model="tempUrl" v-bind:standalone="true" v-bind:class="{'is-invalid':errors['url']}"/>
+                     v-model="tempUrl" v-bind:standalone="true" v-bind:class="{'is-invalid': errors['url']}"/>
                   <button id="addImage" type="button" class="btn btn-outline-primary btn-sm"
                     v-on:click="AddImage(tempUrl, url => addImage(url))" v-bind:disabled="!tempUrl">
                     新增圖片
@@ -27,9 +27,8 @@
                 <label for="input" class="form-label">或上傳圖片</label>
                 <Field class="form-control" name="file" type="file" rules="image" label="選取檔案"
                   v-on:change="event=>UploadImage(event.target.files,url=>addImage(url))" v-bind:standalone="true"/>
-                <ErrorMessage name="file" class="invalid-feedback" v-bind:style="{'display':errors['file']?'block':'none'}"/>
+                <ErrorMessage name="file" class="invalid-feedback" v-bind:style="{'display': errors['file'] ? 'block' : 'none'}"/>
               </div>
-              <!-- 延伸技巧，多圖 -->
               <div class="mt-5 mb-3 input-group">
                 <div class="mb-3 input-group" v-show="ProductStore.product.imageUrl">
                   主圖片
@@ -51,20 +50,20 @@
               <div class="mb-3">
                 <label for="title" class="form-label">標題</label>
                 <Field type="text" class="form-control" id="title" label="標題" name="title" rules="required" placeholder="請輸入標題"
-                       v-model="ProductStore.product.title"  v-bind:class="{'is-invalid':errors['title']}"/>
+                       v-model="ProductStore.product.title"  v-bind:class="{'is-invalid': errors['title']}"/>
                 <ErrorMessage class="invalid-feedback" name="title" />
               </div>
               <div class="row gx-2">
                 <div class="mb-3 col-md-6">
                   <label for="category" class="form-label">分類</label>
                   <Field type="text" class="form-control" id="category" rules="required" placeholder="請輸入分類" label="分類" name="category"
-                         v-model="ProductStore.product.category"  v-bind:class="{'is-invalid':errors['category']}"/>
+                         v-model="ProductStore.product.category"  v-bind:class="{'is-invalid': errors['category']}"/>
                   <ErrorMessage class="invalid-feedback" name="category" />
                 </div>
                 <div class="mb-3 col-md-6">
                   <label for="price" class="form-label">單位</label>
                   <Field type="text" class="form-control" id="unit" label="單位" name="unit" rules="required" placeholder="請輸入單位"
-                         v-model="ProductStore.product.unit"  v-bind:class="{'is-invalid':errors['unit']}"/>
+                         v-model="ProductStore.product.unit"  v-bind:class="{'is-invalid': errors['unit']}"/>
                   <ErrorMessage class="invalid-feedback" name="unit" />
                 </div>
               </div>
@@ -72,13 +71,13 @@
                 <div class="mb-3 col-md-6">
                   <label for="origin_price" class="form-label">原價</label>
                   <Field type="number" class="form-control" id="origin_price" min="1" rules="required|integer" placeholder="請輸入原價" label="原價" name="origin_price"
-                         v-model="ProductStore.product.origin_price"  v-bind:class="{'is-invalid':errors['origin_price']}"/>
+                         v-model="ProductStore.product.origin_price"  v-bind:class="{'is-invalid': errors['origin_price']}"/>
                   <ErrorMessage class="invalid-feedback" name="origin_price" />
                 </div>
                 <div class="mb-3 col-md-6">
                   <label for="price" class="form-label">售價</label>
                   <Field type="number" class="form-control" id="price" min="1" label="售價" name="price" rules="required|integer" placeholder="請輸入售價"
-                         v-model="ProductStore.product.price" v-bind:max="ProductStore.product.price"  v-bind:class="{'is-invalid':errors['price']}"/>
+                         v-model="ProductStore.product.price" v-bind:max="ProductStore.product.price"  v-bind:class="{'is-invalid': errors['price']}"/>
                   <ErrorMessage class="invalid-feedback" name="price" />
                 </div>
               </div>
@@ -115,12 +114,12 @@
   </div>
 </template>
 <script setup>
-  import { Modal } from "bootstrap"
-  import { storeToRefs } from "pinia"
-  import { defineExpose, onMounted, ref, watch } from "vue"
   import useProductStore from "@/stores/products"
   import useLoadingStore from "@/stores/loading"
   import useMessageStore from "@/stores/messages"
+  import { Modal } from "bootstrap"
+  import { storeToRefs } from "pinia"
+  import { defineExpose, onMounted, ref, watch } from "vue"
   import { uploadImage as UploadImage, addImage as AddImage } from "../util"
   const tempUrl = ref('')
   const DOM = ref(null)

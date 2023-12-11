@@ -39,13 +39,15 @@ import { ref,onMounted } from 'vue'
 import useCartStore from "@/stores/carts"
 import { storeToRefs } from 'pinia'
 const myCollapse = ref(null),isActive=ref(false)
-const {cartList}=storeToRefs(useCartStore())
+const { cartList }=storeToRefs(useCartStore())
 let bsCollapse
 onMounted(function () {
   bsCollapse = new Collapse(
-    myCollapse.value, {
-    toggle: false
-  })
+    myCollapse.value, 
+    {
+      toggle: false
+    }
+  )
 })
 function toggleShow () { isActive.value = !isActive.value }
 </script>

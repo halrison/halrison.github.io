@@ -1,6 +1,6 @@
 <template>
   <loading v-bind:active="isLoading" v-bind:is-full-page="true" />
-  <Form class="container" v-if="cartList.length" v-on:submit="addOrder" v-slot="{errors,validate}">
+  <Form class="container" v-if="cartList.length" v-on:submit="addOrder" v-slot="{ errors,validate }">
     <table class="table table-borderless mx-auto w-100">
       <thead>
         <tr class="row">
@@ -28,7 +28,7 @@
                 </div>
                 <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" required min="1"
                        placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"
-                       v-model.number="cart.qty" v-bind:class="{'is-invalid':!cart.qty||cart.qty.toString().includes('.')}" v-on:change="editCart(cart.id,cart.qty)" />
+                       v-model.number="cart.qty" v-bind:class="{'is-invalid': !cart.qty || cart.qty.toString().includes('.')}" v-on:change="editCart(cart.id,cart.qty)" />
                 <div class="input-group-append">
                   <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty+1)">
                     <i class="bi-plus bi"></i>
@@ -73,28 +73,28 @@
       <div class="row">
         <div class="col-3">姓名</div>
         <div class="col-9">
-          <Field class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{'is-invalid':errors['name']}" />
+          <Field class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{'is-invalid': errors['name']}" />
           <ErrorMessage class="text-danger" name="name" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">地址</div>
         <div class="col-9">
-          <Field class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{'is-invalid':errors['address']}" />
+          <Field class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{'is-invalid': errors['address']}" />
           <ErrorMessage class="text-danger" name="address" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電話</div>
         <div class="col-9">
-          <Field class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{'is-invalid':errors['tel']}" />
+          <Field class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{'is-invalid': errors['tel']}" />
           <ErrorMessage class="text-danger" name="tel" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電子信箱</div>
         <div class="col-9">
-          <Field class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{'is-invalid':errors['email']}" />
+          <Field class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{'is-invalid': errors['email']}" />
           <ErrorMessage class="text-danger" name="email" />
         </div>
       </div>
@@ -122,14 +122,14 @@
   import RemoveModal from "@/components/RemoveModal.vue"
   import { currency, http } from "../../util"
   import { storeToRefs } from "pinia"
-  import { computed, onMounted, reactive, ref } from "vue"
+  import { onMounted, ref } from "vue"
   import { useRouter } from "vue-router"
   import { defineRule } from "vee-validate"
   import { max, min } from "@vee-validate/rules"
   const CartStore = useCartStore(), { getCarts } = CartStore, { cartItem, cartList, total, final_total } = storeToRefs(CartStore)
   const { isLoading } = storeToRefs(useLoadingStore()), OrderStore = useOrderStore(), { pushMessage } = useMessageStore()
   const router = useRouter()
-  const message = ref(''), type = ref(''), code = ref(''), modal = ref(null),user=ref({})
+  const message = ref(''), type = ref(''), code = ref(''), modal = ref(null), user = ref({})
   defineRule('min', min)
   defineRule('max', max)
   defineRule('isPhone', value => /(^0[2-8]{1}\d{7,8}$|^09\d{8}$)/.test(value) || '格式不符')

@@ -26,9 +26,9 @@
               </template>
               <template v-slot:body>
                 <div class="card-body">
-                  <span class="card-text float-start">台幣{{product.price}}元</span>
+                  <span class="card-text float-start">台幣{{ product.price }}元</span>
                   <span class="card-text float-end">
-                    <small class="text-muted">剩餘{{product.num}}{{product.unit}}</small>
+                    <small class="text-muted">剩餘{{ product.num }}{{ product.unit }}</small>
                   </span>
                 </div>
               </template>

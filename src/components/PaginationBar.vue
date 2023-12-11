@@ -6,7 +6,7 @@
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <li class="page-item" v-for="page in pagination.total_pages" v-bind:class="{'active':page===pagination.current_page}">
+      <li class="page-item" v-for="page in pagination.total_pages" v-bind:class="{'active': page===pagination.current_page}">
         <a class="page-link"  v-text="page" v-on:click.prevent="changePage(page)"></a>
       </li>
       <li class="page-item" v-if="pagination.has_next">
@@ -21,13 +21,13 @@
 import useProductStore from "@/stores/products"
 import useOrderStore from "@/stores/orders"
 import useCouponStore from "@/stores/coupons"
-import { computed, ref, watch } from "vue"
+import { ref, watch } from "vue"
 const prop=defineProps(['pagination'])
 const pagination = ref({})
 const emit = defineEmits(['paginate'])
 watch(
   ()=>prop.pagination,
-  function(newValue){ pagination.value=newValue },
+  function(newValue){ pagination.value = newValue },
   { deep:true }
 )
 function changePage(page){ 

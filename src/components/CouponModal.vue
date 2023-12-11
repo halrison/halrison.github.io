@@ -2,14 +2,14 @@
   <div class="modal fade" ref="DOM">
     <div class="modal-dialog" role="dialog">
       <Form class="modal-content" v-slot="{errors}" v-on:submit="addEditCoupon" v-on:reset="hide" v-bind:initial-values="coupon" v-bind:initial-errors="error">
-        <div class="modal-header">{{coupon.id?'編輯':'新增'}}優惠券</div>
+        <div class="modal-header">{{ coupon.id ? '編輯' : '新增' }}優惠券</div>
         <div class="modal-body">
           <table class="w-100">
             <tr>
               <td>標題</td>
               <td>
                 <Field label="標題" name="title" class="form-control" type="text" rules="required" 
-                v-model="coupon.title" v-bind:class="{'is-invalid':errors['title']}"/>
+                v-model="coupon.title" v-bind:class="{'is-invalid': errors['title']}"/>
                 <ErrorMessage name="title" class="invalid-feedback"/>
               </td>
             </tr>
@@ -17,7 +17,7 @@
               <td>代碼</td>
               <td>
                 <Field label="代碼" name="code" class="form-control" type="text" rules="required"
-                v-model="coupon.code" v-bind:class="{'is-invalid':errors['code']}" />
+                v-model="coupon.code" v-bind:class="{'is-invalid': errors['code']}" />
                 <ErrorMessage name="code" class="invalid-feedback" />
               </td>
             </tr>
@@ -25,7 +25,7 @@
               <td>折扣</td>
               <td>
                 <Field label="折扣" name="discount" class="form-control" type="number" rules="required|integer" min="1" max="99" 
-                v-model="coupon.percent" v-bind:class="{'is-invalid':errors['discount']}" />
+                v-model="coupon.percent" v-bind:class="{'is-invalid': errors['discount']}" />
                 <ErrorMessage name="discount" class="invalid-feedback" />
               </td>
             </tr>
@@ -33,7 +33,7 @@
               <td>到期日</td>
               <td>
                 <Field label="到期日" name="date" class="form-control" type="date" rules="required"
-                v-model="coupon.due_date" v-bind:class="{'is-invalid':errors['date']}" />
+                v-model="coupon.due_date" v-bind:class="{'is-invalid': errors['date']}" />
                 <ErrorMessage name="date" class="invalid-feedback" />
               </td>
             </tr>
@@ -55,13 +55,13 @@
   </div>
 </template>
 <script setup>
-  import { defineExpose, defineProps, onMounted, ref, watch } from "vue";
+  import { defineExpose, defineProps, onMounted, ref, watch } from "vue"
   import { Modal } from "bootstrap"
-  import { storeToRefs } from "pinia";
-import useCouponStore from "@/stores/coupons"
+  import { storeToRefs } from "pinia"
+  import useCouponStore from "@/stores/coupons"
   const DOM = ref(null)
-const CouponStore = useCouponStore()
-  const {coupon}=storeToRefs(CouponStore)
+  const CouponStore = useCouponStore()
+  const { coupon }=storeToRefs(CouponStore)
   const prop=defineProps(['coupon'])
   const error = {
     "title": "",
@@ -69,7 +69,7 @@ const CouponStore = useCouponStore()
     "date": "",
     "code": ""
   }
-let modal
+  let modal
   defineExpose({ show })
   onMounted(function () {
     modal = new Modal(DOM.value)
@@ -81,8 +81,10 @@ let modal
     }
   )
   function show () { modal.show() }
-  function hide () { modal.hide()
-    CouponStore.getCoupons(1)}
+  function hide () { 
+    modal.hide()
+    CouponStore.getCoupons(1)
+  }
   function addEditCoupon () {
     coupon.value.due_date = Date.parse(coupon.value.due_date)
     if (coupon.value.id) { CouponStore.editCoupon(coupon) } else { CouponStore.addCoupon(coupon) }

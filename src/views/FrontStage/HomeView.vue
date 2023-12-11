@@ -15,12 +15,12 @@
   </div>
   <h2 class="text-center">顧客評論</h2>
   <div class="bg-light my-2">
-    <Carousel v-bind:items="Comments" v-slot="{items}">
-      <div class="carousel-item my-5" v-for="comment,index in items" v-bind:key="index" v-bind:class="{'active':index===0}">
+    <Carousel v-bind:items="Comments" v-slot="{ items }">
+      <div class="carousel-item my-5" v-for="comment, index in items" v-bind:key="index" v-bind:class="{'active': index===0}">
         <div class="py-7 text-center">
           <h3 v-text="comment.message"></h3>
           <p>
-            <small>—{{comment.author}}—</small>
+            <small>—{{ comment.author }}—</small>
           </p>
         </div>
       </div>
@@ -55,7 +55,7 @@
   import ArticleCard from "@/components/ArticleCard.vue"
   import Comments from "@/stores/Comments.json"
   import { storeToRefs } from 'pinia'
-  import { computed, onMounted, } from "vue"
+  import { computed, onMounted } from "vue"
   const { isLoading } = storeToRefs(useLoadingStore())
   const ProductStore = useProductStore()
   const { getProducts } = ProductStore
@@ -82,16 +82,13 @@
     position: relative;
     top: -10px;
   }
-
   h3 {
     font-size: 1.2rem;
   }
-
   .greetings h1,
   .greetings h3 {
     text-align: center;
   }
-
   @media (min-width: 1024px) {
     .greetings h1,
     .greetings h3 {

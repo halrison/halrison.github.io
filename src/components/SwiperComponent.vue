@@ -17,9 +17,9 @@
         </template>
         <template v-slot:body>
           <div class="card-body">
-            <span class="card-text float-start">台幣{{product.price}}元</span>
+            <span class="card-text float-start">台幣{{ product.price }}元</span>
             <span class="card-text float-end">
-              <small class="text-muted">剩餘{{product.num}}{{product.unit}}</small>
+              <small class="text-muted">剩餘{{ product.num }}{{ product.unit }}</small>
             </span>
           </div>
         </template>
@@ -33,7 +33,7 @@
   import { onMounted } from 'vue'
   import useProductStore from "@/stores/products"
   import ProductCard from "@/components/ProductCard.vue"
-import 'swiper/css'
+  import 'swiper/css'
   import 'swiper/css/navigation'
   import 'swiper/css/autoplay'
   const modules = [Autoplay, Navigation]

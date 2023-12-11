@@ -9,17 +9,15 @@
   </div>
 </template>
 <script setup>
-import { onMounted,ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Toast } from 'bootstrap'
-const DOM = ref(null),prop=defineProps(['msg'])
+const DOM = ref(null), prop=defineProps(['msg'])
 let toastObject
 onMounted(function(){
-  toastObject=new Toast(
+  toastObject = new Toast(
     DOM.value,
-    { delay:3000 }
+    { delay: 3000 }
   )
   toastObject.show()
 })
 </script>
-<style scoped>
-</style>

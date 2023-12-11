@@ -17,9 +17,9 @@ function addImage (tempUrl, callback) {
   image.onerror = function () { pushMessage('danger', '上傳圖片失敗', '此網址並非圖片') }
 }
 function uploadImage (files, callback) {
-  const form = new FormData, file = ref(files[0])
-  if (file.value
-  ) {
+  const form = new FormData
+  const file = ref(files[0])
+  if (file.value){
     form.append('image', file.value)
     http.post(
       `/api/${import.meta.env.VITE_PATH}/admin/upload`,

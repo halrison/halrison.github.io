@@ -7,7 +7,7 @@ import { http } from "../util"
 export default defineStore(
   'carts',
   () => {
-    const cartItem=ref({}),cartList = ref([]), final_total = ref(0), total = ref(0)
+    const cartItem = ref({}), cartList = ref([]), final_total = ref(0), total = ref(0)
     const { isLoading } = storeToRefs(useLoadingStore())
     const { product } = storeToRefs(useProductStore())
     const { pushMessage } = useMessageStore()
@@ -29,9 +29,9 @@ export default defineStore(
         }
       }).finally(function () { getCarts() })
     }
-    function editCart ( qty) {
-        console.info(cartItem.value)
-http.put(
+    function editCart (qty) {
+      console.info(cartItem.value)
+      http.put(
         `/api/${import.meta.env.VITE_PATH}/cart/${cartItem.value.id}`,
         {
           data:
@@ -44,18 +44,18 @@ http.put(
         if (response.data.success) {
           pushMessage('success', response.data.message)
           cartList.value.splice(
-            cartList.value.findIndex(cart=>cart===cartItem.value),
+            cartList.value.findIndex(cart => cart === cartItem.value),
             1,
             {
-                ...cartItem.value,
-                product_id:response.data.data.product_id,
-                qty:response.data.data.qty
+              ...cartItem.value,
+              product_id: response.data.data.product_id,
+              qty: response.data.data.qty
             }
           )
         } else {
           response.data.message.forEach(function (msg) { pushMessage('danger', '未更新購物車', msg) })
         }
-      }).finally(function () { 
+      }).finally(function () {
         getCarts()
       })
     }
@@ -91,6 +91,6 @@ http.put(
           }
         }).finally(function () { getCarts() })
     }
-    return { cartItem,cartList, final_total, total, addCart, editCart, getCarts, removeCart, removeCarts }
+    return { cartItem, cartList, final_total, total, addCart, editCart, getCarts, removeCart, removeCarts }
   }
 )

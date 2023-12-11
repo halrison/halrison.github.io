@@ -6,6 +6,6 @@ export default function(){
   http.defaults.headers.common.Authorization=token
   http.post('/api/user/check')
     .then(function(response){
-      if(!response.data.success) router.push({path: '/login'})
+      if(!response.data.success) router.push({ path: '/login' })
     })
 }

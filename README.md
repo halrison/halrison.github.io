@@ -1,4 +1,17 @@
-# .
+#  Zay 生活用品店 ( 六角學院 Vue3 實戰影音課程最終挑戰 )
+
+使用的技術：
+* Vue 3 ( Composition API )
+* Vite
+* Vue-Router
+* Vee-Validate
+* Vue3-LoadingOverlay
+* Bootstrap.css
+* Pinia
+* Swiper
+* Axios
+
+---
 
 This template should help get you started developing with Vue 3 in Vite.
 
