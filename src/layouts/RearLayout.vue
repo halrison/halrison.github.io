@@ -9,13 +9,16 @@
     </main>
   </div>
 </template>
+
 <script setup>
   import { storeToRefs } from 'pinia'
   import SideBar from '@/components/SideBar.vue'
   import ToastList from "@/components/ToastList.vue"
   import useMessageStore from '@/stores/messages'
+
   const { messages } = storeToRefs(useMessageStore())
 </script>
+
 <style>
   @media (max-width: 768px) {
     [class^='col'] {

@@ -3,36 +3,56 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" v-text="title"></h5>
+          <h5 class="modal-title">{{ title }}</h5>
         </div>
         <div class="modal-body">
           <p>您要{{title}}嗎？</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" v-on:click="hide">取消</button>
-          <button type="button" class="btn btn-danger" v-on:click="remove">確定</button>
+          <button type="button" class="btn btn-secondary" @click="hide">取消</button>
+          <button type="button" class="btn btn-danger" @click="remove">確定</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
-  import { storeToRefs } from "pinia";
-  import { defineExpose, onMounted, ref, watch } from "vue";
-  import { Modal } from "bootstrap";
-  import useLoadingStore from '@/stores/loading'
+  import { storeToRefs } from "pinia"
+  import { defineExpose, onMounted, ref, watch } from "vue"
+  import { Modal } from "bootstrap"
+  import useLoadingStore from "@/stores/loading"
   import useProductStore from '@/stores/products'
   import useOrderStore from '@/stores/orders'
   import useCouponStore from "@/stores/coupons"
   import useCartStore from "@/stores/carts"
   import useArticleStore from "@/stores/articles"
-  const DOM = ref(null), prop = defineProps(['item', 'type'])
-  const ProductStore = useProductStore(), { removeProduct } = ProductStore, { product } = storeToRefs(ProductStore)
-  const OrderStore = useOrderStore(), { removeOrder, removeOrders } = OrderStore, { order } = storeToRefs(OrderStore)
-  const CouponStore = useCouponStore(), { removeCoupon } = CouponStore, { coupon } = storeToRefs(CouponStore)
-  const ArticleStore = useArticleStore(), { removeArticle } = ArticleStore, { article } = storeToRefs(ArticleStore)
-  const { removeCart, removeCarts } = useCartStore(), cart = ref({}), title = ref('')
+
+
+  const DOM = ref(null)
+  const prop = defineProps([ 'item', 'type' ])
+  const cart = ref({})
+  const title = ref('')
+
+  const ProductStore = useProductStore()
+  const { removeProduct } = ProductStore
+  const { product } = storeToRefs(ProductStore)
+
+  const OrderStore = useOrderStore()
+  const { removeOrder, removeOrders } = OrderStore
+  const { order } = storeToRefs(OrderStore)
+
+  const CouponStore = useCouponStore()
+  const { removeCoupon } = CouponStore
+  const { coupon } = storeToRefs(CouponStore)
+
+  const ArticleStore = useArticleStore()
+  const { removeArticle } = ArticleStore
+  const { article } = storeToRefs(ArticleStore)
+
+  const { removeCart, removeCarts } = useCartStore()
   let modal
+
   onMounted(function () {
     modal = new Modal(DOM.value)
   })
@@ -58,8 +78,13 @@
     }
   )
   defineExpose({ show })
-  function show () { modal.show() }
-  function hide () { modal.hide() }
+
+  function show () { 
+    modal.show()
+  }
+  function hide () {
+    modal.hide() 
+  }
   async function remove () {
     switch (prop.type) {
       case '產品':

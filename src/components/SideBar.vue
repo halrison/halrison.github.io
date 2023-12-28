@@ -4,10 +4,11 @@
       <img src="@/assets/images/apple-icon.png" width="30" height="24" />
       後臺管理系統
     </router-link>
-    <button v-on:click="toggleShow" v-bind:style="{'visibility': isDesktop ? 'hidden' : 'visible'}" ref="myCollapse" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <button @click="toggleShow" :style="{ 'visibility': isDesktop ? 'hidden' : 'visible' }" ref="myCollapse" class="navbar-toggler" type="button"
+      data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div v-bind:class="{'show': isActive}" class="collapse navbar-collapse vh-100" id="navbarNavAltMarkup">
+    <div :class="{ 'show': isActive }" class="collapse navbar-collapse vh-100" id="navbarNavAltMarkup">
       <div class="nav flex-column">
         <router-link to="/admin/product" class="text-center text-secondary nav-link">
           <i class="fa-brands fa-product-hunt"></i>
@@ -26,7 +27,7 @@
           文章
         </router-link>
         <div class="d-grid gap-2">
-          <button class="btn btn-danger" type="button" v-on:click="logout">登出</button>
+          <button class="btn btn-danger" type="button" @click="logout">登出</button>
         </div>
       </div>
     </div>
@@ -37,8 +38,14 @@
   import { ref, onMounted, watchEffect } from 'vue'
   import { http } from '../util'
   import { useRouter } from 'vue-router'
-  const myCollapse = ref(null), isActive = ref(false), isDesktop = ref(false), screenWidth = ref(window.innerWidth), router = useRouter()
+
+  const myCollapse = ref(null)
+  const isActive = ref(false)
+  const isDesktop = ref(false)
+  const screenWidth = ref(window.innerWidth)
+  const router = useRouter()
   let bsCollapse
+
   onMounted(function () {
     bsCollapse = new Collapse(
       myCollapse.value,
@@ -46,7 +53,9 @@
         toggle: false
       }
     )
-    window.addEventListener('resize', function () { screenWidth.value = window.innerWidth })
+    window.addEventListener('resize', function () { 
+      screenWidth.value = window.innerWidth
+    })
   })
   watchEffect(function () {
     if (screenWidth.value > 768) {
@@ -57,7 +66,10 @@
       isDesktop.value = false
     }
   })
-  function toggleShow () { isActive.value = !isActive.value }
+
+  function toggleShow () {
+    isActive.value = !isActive.value
+  }
   function logout () {
     http.post('/logout')
       .then(function (response) {

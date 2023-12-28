@@ -1,5 +1,5 @@
 <template>
-  <loading v-bind:is-full-apge="true" v-bind:active="isLoading" />
+  <LoadingC v-bind:is-full-apge="true" v-bind:active="isLoading" />
   <div class="row justify-content-center my-auto">
     <div class="text-center">
       <h1 class="mt-3">Zay 生活用品店</h1>
@@ -16,9 +16,9 @@
   <h2 class="text-center">顧客評論</h2>
   <div class="bg-light my-2">
     <Carousel v-bind:items="Comments" v-slot="{ items }">
-      <div class="carousel-item my-5" v-for="comment, index in items" v-bind:key="index" v-bind:class="{'active': index===0}">
+      <div class="carousel-item my-5" v-for="comment, index in items" v-bind:key="index" v-bind:class="{ 'active': index === 0 }">
         <div class="py-7 text-center">
-          <h3 v-text="comment.message"></h3>
+          <h3>{{ comment.message }}</h3>
           <p>
             <small>—{{ comment.author }}—</small>
           </p>
@@ -27,7 +27,7 @@
     </Carousel>
   </div>
   <h2 class="text-center">最新文章</h2>
-  <div class="row my-2 m-auto" v-for="article in filterArticles">
+  <div class="row my-2 m-auto" v-for="article in filterArticles" :key="article.id">
     <ArticleCard v-bind:article="article" />
   </div>
   <div class="bg-light py-4" id="discount-area">
@@ -46,28 +46,39 @@
     </div>
   </div>
 </template>
+
 <script setup>
   import useLoadingStore from "@/stores/loading"
   import useProductStore from "@/stores/products"
   import useArticleStore from "@/stores/articles"
+  import useMessageStore from "@/stores/messages"
   import Swiper from "@/components/SwiperComponent.vue"
   import Carousel from "@/components/CarouselComponent.vue"
   import ArticleCard from "@/components/ArticleCard.vue"
   import Comments from "@/stores/Comments.json"
   import { storeToRefs } from 'pinia'
   import { computed, onMounted } from "vue"
+
+
   const { isLoading } = storeToRefs(useLoadingStore())
+
   const ProductStore = useProductStore()
   const { getProducts } = ProductStore
   const { products } = storeToRefs(ProductStore)
+
   const ArticleStore = useArticleStore()
   const { getArticles } = ArticleStore
   const { articles } = storeToRefs(ArticleStore)
+
   const filterArticles = computed(() => [...articles.value].sort(() => Math.random() - 0.5).splice(0, 2))
+
   onMounted(async function () {
-    await getProducts(1, 'customer')
-    await getArticles(1, 'customer')
+    Promise.all([ getProducts(1, 'customer'), getArticles(1, 'customer') ])
+    .catch(function (error) {
+      useMessageStore().pushMessage('info', '', error)
+    })
   })
+
   function getDiscount(){
     document.getElementById("discount-area").scrollIntoView()
   }
@@ -75,6 +86,7 @@
     navigator.clipboard.writeText('aniversity')
   }
 </script>
+
 <style scoped>
   h1 {
     font-weight: 500;
@@ -85,10 +97,12 @@
   h3 {
     font-size: 1.2rem;
   }
+
   .greetings h1,
   .greetings h3 {
     text-align: center;
   }
+
   @media (min-width: 1024px) {
     .greetings h1,
     .greetings h3 {

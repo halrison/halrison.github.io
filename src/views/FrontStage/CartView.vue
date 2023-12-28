@@ -1,6 +1,6 @@
 <template>
-  <loading v-bind:active="isLoading" v-bind:is-full-page="true" />
-  <Form class="container" v-if="cartList.length" v-on:submit="addOrder" v-slot="{ errors,validate }">
+  <LoadingC :active="isLoading" :is-full-page="true" />
+  <FormC class="container" v-if="cartList.length" @submit="addOrder" v-slot="{ errors, validate }">
     <table class="table table-borderless mx-auto w-100">
       <thead>
         <tr class="row">
@@ -11,26 +11,26 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="row" v-for="cart,index in cartList" v-bind:key="cart.id">
+        <tr class="row" v-for="cart,index in cartList" :key="cart.id">
           <td class="col-1">
-            <button type="button" class="btn btn-outline-danger" v-on:click="removeCart(cart.id)">
+            <button type="button" class="btn btn-outline-danger" @click="removeCart(cart.id)">
               <i class="bi bi-cart-x-fill"></i>
             </button>
           </td>
-          <td class="col-6" v-text="cart.product.title"></td>
+          <td class="col-6">{{ cart.product.title }}</td>
           <td class="col-2 text-end">
             <div class="input-group d-inline-block">
               <div class="input-group bg-light rounded">
                 <div class="input-group-prepend">
-                  <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty-1)" v-bind:disabled="cart.qty<2">
+                  <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty - 1)" :disabled="cart.qty < 2">
                     <i class="bi bi-dash"></i>
                   </button>
                 </div>
                 <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" required min="1"
-                       placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"
-                       v-model.number="cart.qty" v-bind:class="{'is-invalid': !cart.qty || cart.qty.toString().includes('.')}" v-on:change="editCart(cart.id,cart.qty)" />
+                       aria-label="Example text with button addon" aria-describedby="button-addon1"
+                       v-model.number="cart.qty" :class="{ 'is-invalid': !cart.qty || cart.qty.toString().includes('.') }" @change="editCart(cart.id, cart.qty)" />
                 <div class="input-group-append">
-                  <button class="btn btn-outline-dark border-0 py-2" type="button" v-on:click="editCart(cart.id,cart.qty+1)">
+                  <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty + 1)">
                     <i class="bi-plus bi"></i>
                   </button>
                 </div>
@@ -39,31 +39,31 @@
               <span v-if="!cart.qty" class="text-danger">商品數量為必填</span>
               <span v-else-if="cart.qty.toString().includes('.')" class="text-danger">商品數量需為整數</span>
           </td>
-          <td class="col-3 text-end" v-text="currency(cart.total)"></td>
+          <td class="col-3 text-end">{{ currency(cart.total) }}</td>
         </tr>
       </tbody>
       <tfoot>
-        <tr class="row" v-if="final_total===total">
+        <tr class="row" v-if="final_total === total">
           <th class="col-6"></th>
           <td class="col-3 text-end">總計</td>
-          <td class="col-3 text-end" v-text="currency(total)"></td>
+          <td class="col-3 text-end">{{ currency(total) }}</td>
         </tr>
         <tr class="row" v-else>
           <th class="col-1">折扣</th>
-          <td class="col-6" v-text="currency(total-final_total)"></td>
+          <td class="col-6">{{ currency(total - final_total) }}</td>
           <th class="col-2 text-end">優惠價</th>
-          <td class="col-3 text-end" v-text="currency(final_total)"></td>
+          <td class="col-3 text-end">{{ currency(final_total) }}</td>
         </tr>
       </tfoot>
     </table>
     <div class="input-group">
       <label class="input-group-text" for="code">輸入優惠碼</label>
       <input class="form-control" id="code" type="text" v-model="code" />
-      <button class="btn btn-secondary" v-on:click="applyCoupon(code)">
+      <button class="btn btn-secondary" @click="applyCoupon(code)">
         <i class="bi bi-percent"></i>
         套用優惠碼
       </button>
-      <button class="btn btn-danger" v-on:click="removeCarts">
+      <button class="btn btn-danger" @click="removeCarts">
         <i class="bi bi-cart-x"></i>
         清空購物車
       </button>
@@ -73,28 +73,28 @@
       <div class="row">
         <div class="col-3">姓名</div>
         <div class="col-9">
-          <Field class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{'is-invalid': errors['name']}" />
+          <FieldC class="form-control" rules="required" name="name" label="姓名" v-model="user.name" :class="{ 'is-invalid': errors['name'] }" />
           <ErrorMessage class="text-danger" name="name" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">地址</div>
         <div class="col-9">
-          <Field class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{'is-invalid': errors['address']}" />
+          <FieldC class="form-control" rules="required" name="address" label="地址" v-model="user.address" :class="{ 'is-invalid': errors['address'] }" />
           <ErrorMessage class="text-danger" name="address" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電話</div>
         <div class="col-9">
-          <Field class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{'is-invalid': errors['tel']}" />
+          <FieldC class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" :class="{ 'is-invalid': errors['tel'] }" />
           <ErrorMessage class="text-danger" name="tel" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電子信箱</div>
         <div class="col-9">
-          <Field class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{'is-invalid': errors['email']}" />
+          <FieldC class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" :class="{ 'is-invalid': errors['email'] }" />
           <ErrorMessage class="text-danger" name="email" />
         </div>
       </div>
@@ -106,13 +106,13 @@
       </div>
       <div class="row">
         <div class="my-1">
-          <button class="btn btn-primary" type="submit" v-on:submit="validate">前往付款</button>
+          <button class="btn btn-primary" type="submit" @submit="validate">前往付款</button>
         </div>
       </div>
     </div>
-  </Form>
+  </FormC>
   <h1 class="text-center" v-else>未選購任何商品</h1>
-  <RemoveModal ref="modal" v-bind:item="cartItem" v-bind:type="type" />
+  <RemoveModal ref="modal" :item="cartItem" :type="type" />
 </template>
 <script setup>
   import useCartStore from "@/stores/carts"
@@ -120,22 +120,38 @@
   import useOrderStore from "@/stores/orders"
   import useMessageStore from "@/stores/messages"
   import RemoveModal from "@/components/RemoveModal.vue"
+
   import { currency, http } from "../../util"
   import { storeToRefs } from "pinia"
   import { onMounted, ref } from "vue"
   import { useRouter } from "vue-router"
   import { defineRule } from "vee-validate"
   import { max, min } from "@vee-validate/rules"
-  const CartStore = useCartStore(), { getCarts } = CartStore, { cartItem, cartList, total, final_total } = storeToRefs(CartStore)
-  const { isLoading } = storeToRefs(useLoadingStore()), OrderStore = useOrderStore(), { pushMessage } = useMessageStore()
+
+
+  const CartStore = useCartStore()
+  const{ getCarts } = CartStore
+  const { cartItem, cartList, total, final_total } = storeToRefs(CartStore)
+
+  const { isLoading } = storeToRefs(useLoadingStore()) 
+  const OrderStore = useOrderStore()
+  const { pushMessage } = useMessageStore()
+
   const router = useRouter()
-  const message = ref(''), type = ref(''), code = ref(''), modal = ref(null), user = ref({})
+
+  const message = ref('')
+  const type = ref('')
+  const code = ref('')
+  const modal = ref(null)
+  const user = ref({})
+
   defineRule('min', min)
   defineRule('max', max)
   defineRule('isPhone', value => /(^0[2-8]{1}\d{7,8}$|^09\d{8}$)/.test(value) || '格式不符')
   onMounted(async function () {
     await getCarts()
   })
+
   async function addOrder () {
     await OrderStore.addOrder(user.value, message.value)
     cartList.value = []

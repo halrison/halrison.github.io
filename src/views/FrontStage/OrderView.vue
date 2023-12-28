@@ -1,5 +1,5 @@
 <template>
-  <loading v-bind:is-full-page="true" v-bind:active="isLoading" />
+  <LoadingC :is-full-page="true" :active="isLoading" />
   <div class="table-responsive">
     <table class="table table-striped table-sm">
       <thead>
@@ -12,42 +12,52 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="o in orders" v-bind:key="o.num">
-          <td v-text="o.id"></td>
-          <td v-text="new Date(o.create_at*1000).toLocaleDateString()"></td>
-          <td>{{ o.paid_date ? new Date(o.paid_date*1000).toLocaleDateString() : '尚未付款' }}</td>
-          <td class="text-end" v-text="currency(o.total)"></td>
+        <tr v-for="order in orders" :key="order.num">
+          <td>{{ order.id }}</td>
+          <td>{{ new Date(order.create_at*1000).toLocaleDateString() }}</td>
+          <td>{{ order.paid_date ? new Date(order.paid_date*1000).toLocaleDateString() : '尚未付款' }}</td>
+          <td class="text-end">{{ currency(order.total) }}</td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-              <button class="btn btn-outline-primary" v-on:click="openModal('view',o.id)">檢視</button>
-              <button class="btn btn-outline-info" v-on:click="openModal('pay',o.id)" v-show="!o.paid_date">付款</button>
+              <button class="btn btn-outline-primary" @click="openModal('view',order.id)">檢視</button>
+              <button class="btn btn-outline-info" @click="openModal('pay',order.id)" v-show="!order.paid_date">付款</button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages>1" v-on:paginate="page=>getOrders(page,'user')" />
-    <OrderModal v-bind:order="order" type="user" ref="viewModal" />
-    <PayModal v-bind:order="order" ref="payModal" />
+    <Pagination :pagination="pagination" v-show="pagination.total_pages>1" @paginate="page => getOrders(page, 'user')" />
+    <OrderModal :order="order" type="user" ref="viewModal" />
+    <PayModal :order="order" ref="payModal" />
   </div>
 </template>
+
 <script setup>
-  import useLoadingStore from "@/stores/loading"
-  import useOrderStore from "@/stores/orders"
   import { storeToRefs } from "pinia"
   import { onMounted, ref } from "vue"
   import { currency } from "../../util"
+  import useLoadingStore from "@/stores/loading"
+  import useOrderStore from "@/stores/orders"
   import OrderModal from "@/components/OrderModal.vue"
   import PayModal from "@/components/PayModal.vue"
   import Pagination from "@/components/PaginationBar.vue"
-  const viewModal = ref(null), payModal = ref(null)
+
+  const viewModal = ref(null)
+  const  payModal = ref(null)
+  const order = ref({})
+
   const { isLoading } = storeToRefs(useLoadingStore())
-  const orderStore = useOrderStore(), { getOrders } = orderStore, { orders, pagination } = storeToRefs(orderStore), order = ref({})
+
+  const orderStore = useOrderStore()
+  const { getOrders } = orderStore
+  const { orders, pagination } = storeToRefs(orderStore)
+
   onMounted(function () {
     getOrders(1, 'user')
   })
+
   function openModal (action, id) {
-    order.value = orders.value.find(o => o.id === id)
+    order.value = orders.value.find(order => order.id === id)
     if (action === 'view') {
       viewModal.value.show()
     } else {

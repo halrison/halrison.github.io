@@ -1,6 +1,6 @@
 <template>
-  <loading v-bind:is-full-page="true" v-bind:active="isLoading" />
-  <button type="button" class="float-end btn btn-primary" v-on:click="openModal('add')">新增文章</button>
+  <LoadingC :is-full-page="true" :active="isLoading" />
+  <button type="button" class="float-end btn btn-primary" @click="openModal('add')">新增文章</button>
   <table class="table">
     <thead>
       <tr>
@@ -12,42 +12,50 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="article in articles" v-bind:key="article.id">
-        <td v-text="article.title"></td>
-        <td v-text="article.author"></td>
-        <td v-text="new Date(article.create_at).toLocaleDateString()"></td>
-        <td>{{article.isPublic?'是':'否'}}</td>
+      <tr v-for="article in articles" :key="article.id">
+        <td>{{ article.title }}</td>
+        <td>{{ article.author }}</td>
+        <td>{{ new Date(article.create_at).toLocaleDateString() }}</td>
+        <td>{{ article.isPublic ? '是' : '否' }}</td>
         <td>
           <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-primary" v-on:click="openModal('edit',article.id)">編輯</button>
-            <button class="btn btn-outline-danger" v-on:click="openModal('remove',article.id)">移除</button>
+            <button class="btn btn-outline-primary" @click="openModal('edit', article.id)">編輯</button>
+            <button class="btn btn-outline-danger" @click="openModal('remove', article.id)">移除</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
-  <Pagination v-bind:pagination="pagination" v-show="pagination.total_pages>1" v-on:paginate="page=>ArticleStore.getArticles(page,'admin')" />
-  <ArticleModal ref="addEditModal" v-bind:article="article" />
-  <RemoveModal type="文章" ref="removeModal" v-bind:item="article" />
+  <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="page => ArticleStore.getArticles(page, 'admin')" />
+  <ArticleModal ref="addEditModal" :article="article" />
+  <RemoveModal type="文章" ref="removeModal" :item="article" />
 </template>
+
 <script setup>
-  import { storeToRefs } from 'pinia'
-  import { computed, onMounted, ref } from 'vue'
+  import { storeToRefs } from "pinia"
+  import { computed, onMounted, ref } from "vue"
   import useArticleStore from "@/stores/articles"
   import useLoadingStore from "@/stores/loading"
   import Pagination from "@/components/PaginationBar.vue"
   import ArticleModal from "@/components/ArticleModal.vue"
   import RemoveModal from "@/components/RemoveModal.vue"
+
+
   const addEditModal = ref(null)
   const removeModal = ref(null)
   const article = ref({})
+
   const ArticleStore = useArticleStore()
+
+  const { isLoading } = storeToRefs(useLoadingStore())
+
   const articles = computed(() => ArticleStore.articles)
   const pagination = computed(() => ArticleStore.pagination)
-  const { isLoading } = storeToRefs(useLoadingStore())
+
   onMounted(async function () {
     await ArticleStore.getArticles(1, 'admin')
   })
+
   function openModal (action, id = '') {
     article.value = {}
     switch (action) {

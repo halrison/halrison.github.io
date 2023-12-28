@@ -1,5 +1,3 @@
-<script setup>
-</script>
 <template>
   <div class="bg-secondary py-5">
     <div class="container">

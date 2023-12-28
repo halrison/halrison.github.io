@@ -1,21 +1,21 @@
 <template>
-  <Swiper ref="{swiperRef}" 
-      v-bind:slidesPerView="3"
-      v-bind:spaceBetween="10"
-      v-bind:autoplay="{
+  <Swiper ref="{ swiperRef }" 
+      :slidesPerView="3"
+      :spaceBetween="10"
+      :autoplay="{
         delay: 2500,
-        disableOnInteraction: false,
+        disableOnInteraction: false
       }"
-      v-bind:navigation="true"
-      v-bind:modules="modules">
-    <swiper-slide class="col-4" v-for="product,index in prop.products" v-bind:key="index">
-      <ProductCard v-bind:product="product">
-        <template v-slot:header>
+      :navigation="true"
+      :modules="modules">
+    <SwiperSlide class="col-4" v-for="product,index in prop.products" :key="index">
+      <ProductCard :product="product">
+        <template #header>
           <div class="card-header">
-            <h5 class="card-title" v-text="product.title"></h5>
+            <h5 class="card-title">{{ product.title }}</h5>
           </div>
         </template>
-        <template v-slot:body>
+        <template #body>
           <div class="card-body">
             <span class="card-text float-start">台幣{{ product.price }}元</span>
             <span class="card-text float-end">
@@ -24,18 +24,19 @@
           </div>
         </template>
       </ProductCard>
-    </swiper-slide>
+    </SwiperSlide>
   </Swiper>
 </template>
+
 <script setup>
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import { Autoplay, Navigation } from 'swiper/modules'
-  import { onMounted } from 'vue'
-  import useProductStore from "@/stores/products"
+  import { defineProps } from 'vue'
   import ProductCard from "@/components/ProductCard.vue"
   import 'swiper/css'
   import 'swiper/css/navigation'
   import 'swiper/css/autoplay'
-  const modules = [Autoplay, Navigation]
+
+  const modules = [ Autoplay, Navigation ]
   const prop=defineProps(['products'])
 </script>

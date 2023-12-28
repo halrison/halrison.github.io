@@ -1,41 +1,55 @@
-import { ref } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
-import {http} from '../util'
-import useMessageStore from '@/stores/messages'
+import { ref } from "vue"
+import { defineStore, storeToRefs } from "pinia"
+import { http } from "../util"
+import useMessageStore from "@/stores/messages"
 import useLoadingStore from "@/stores/loading"
+
 export default defineStore(
   'products',
   () => {
-    const product = ref({}), products = ref([]), pagination=ref({})
+    const product = ref({})
+    const products = ref([])
+    const pagination=ref({})
     const { isLoading } = storeToRefs(useLoadingStore())
     const { pushMessage } = useMessageStore()
+    
     function addProduct () {
       http.post(
         `/api/${import.meta.env.VITE_PATH}/admin/product/`,
-        { data: product.value }
+        { 
+          data: product.value 
+        }
       ).then(function (response) {
           if (response.data.success) {
             pushMessage('success', '新增商品成功', response.data.message)
           } else {
-            response.data.message.forEach(msg => { pushMessage('danger', '新增商品失敗', msg) })
+            response.data.message.forEach(function (msg) {
+              pushMessage('danger', '新增商品失敗', msg) 
+            })
           }
-        }).catch(function (error) { pushMessage('danger', '新增商品失敗', error?.message) })
-        .finally(function () { 
-          getProducts()
+        }).catch(function (error) {
+          pushMessage('danger', '新增商品失敗', error?.message)
+        }).finally(function () {
+          getProducts() 
         })
     }
     function editProduct () {
       http.put(
         `/api/${import.meta.env.VITE_PATH}/admin/product/${product.value.id}`,
-        { data: product.value }
+        { 
+          data: product.value 
+        }
       ).then(function (response) {
           if (response.data.success) {
             pushMessage('success', '變更商品成功', response.data.message)
           } else {
-            response.data.message.forEach(msg => { pushMessage('danger', '變更商品失敗', msg) })
+            response.data.message.forEach(function (msg) {
+              pushMessage('danger', '變更商品失敗', msg)
+            })
           }
-        }).catch(function (error) { pushMessage('danger', '變更商品失敗', error?.message) })
-        .finally(function () {
+        }).catch(function (error) {
+          pushMessage('danger', '變更商品失敗', error?.message) 
+        }).finally(function () {
           getProducts(1,'admin')
         })
     }
@@ -49,9 +63,10 @@ export default defineStore(
           } else {
             pushMessage('danger', '取得商品失敗', response.data.message)
           }
-        }).catch(function (error) { pushMessage('danger', '取得商品失敗', error?.message) })
-        .finally(function () {
-          isLoading.value = false
+        }).catch(function (error) { 
+          pushMessage('danger', '取得商品失敗', error?.message) 
+        }).finally(function () {
+          isLoading.value = false 
         })
     }
     function getProducts (page, role) {
@@ -69,7 +84,8 @@ export default defineStore(
             products.value =response.data.products
             pagination.value=response.data.pagination
           }
-        }).catch(function (error) { pushMessage('danger', '取得商品失敗', error?.message) 
+        }).catch(function (error) { 
+          pushMessage('danger', '取得商品失敗', error?.message) 
         }).finally(function () {
           isLoading.value = false
         })
@@ -83,9 +99,10 @@ export default defineStore(
           } else {
             pushMessage('danger', '移除商品失敗', response.data.message)
           }
-        }).catch(function (error) { pushMessage('danger', '移除商品失敗', error?.message) 
+        }).catch(function (error) { 
+          pushMessage('danger', '移除商品失敗', error?.message) 
         }).finally(function () {
-          getProducts(1,'admin')
+          getProducts(1, 'admin')
           isLoading.value = false
         })
     }

@@ -1,4 +1,3 @@
-//eslint-disable vue/multi-word-component-names,vue/no-reservecomponent-names
 import { createApp } from 'vue'
 import { Form, Field, ErrorMessage, defineRule, configure, FieldArray } from 'vee-validate'
 import { localize, setLocale } from '@vee-validate/i18n'
@@ -8,19 +7,25 @@ import Loading from 'vue-loading-overlay'
 import App from './App.vue'
 import router from './router'
 import pinia from './stores'
-Object.keys(VeeValidateRules).forEach(rule => defineRule(rule, VeeValidateRules[rule]))
+
+Object.keys(VeeValidateRules).forEach(function (rule) { 
+  defineRule(rule, VeeValidateRules[rule])
+})
+
 configure({
   generateMessage: localize('zh_TW', zhTW),
   validateOnInput: true
 })
 setLocale('zh_TW')
+
 const app = createApp(App)
+
 app.config.globalProperties.window = window
 app.use(router)
 app.use(pinia)
-app.component('loading', Loading)
-app.component('Form', Form)
-app.component('Field', Field)
+app.component('LoadingC', Loading)
+app.component('FormC', Form)
+app.component('FieldC', Field)
 app.component('FieldArray', FieldArray)
 app.component('ErrorMessage', ErrorMessage)
 app.mount('#app')
